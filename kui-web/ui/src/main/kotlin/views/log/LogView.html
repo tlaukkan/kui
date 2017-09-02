@@ -1,0 +1,55 @@
+<div class="container-fluid">
+<div class="btn-toolbar mb-2 justify-content-between" role="toolbar">
+    <div class="input-group mr-2">
+        <span class="input-group-addon">Since</span>
+        <input id = "sinceInput" type="text" class="form-control" placeholder="yyyy-MM-dd HH:mm:ss" onfocusout="component.setCustomTimeScope()">
+        <span class="input-group-addon">Until</span>
+        <input id = "untilInput" type="text" class="form-control" placeholder="yyyy-MM-dd HH:mm:ss" onfocusout="component.setCustomTimeScope()">
+    </div>
+
+    <div class="btn-group" role="group">
+        <button id="liveButton" type="button" class="btn btn-secondary" onclick="component.live()">Live</button>
+        <button id="todayButton" type="button" class="btn btn-secondary" onclick="component.today()">Today</button>
+        <button id="yesterdayButton" type="button" class="btn btn-secondary" onclick="component.yesterday()">Yesterday</button>
+        <button id="lastWeekButton" type="button" class="btn btn-secondary" onclick="component.lastWeek()">Last Week</button>
+        <button id="lastMonthButton" type="button" class="btn btn-secondary" onclick="component.lastMonth()">Last Month</button>
+    </div>
+</div>
+
+<div class="btn-toolbar mb-2 justify-content-between" role="toolbar">
+    <div class="btn-group mr-2" role="group">
+        <div class="btn-group" role="group">
+            <button id="environmentScopeDrop" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                Environment
+            </button>
+            <div class="dropdown-menu" repeater="environmentScope">
+                <a class="dropdown-item" href="#" onclick="component.environmentScopeChange('{environmentScope}');return false;">{environmentScope}</a>
+            </div>
+        </div>
+        <div class="btn-group" role="group">
+            <button id="hostScopeDrop" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                Host
+            </button>
+            <div class="dropdown-menu" repeater="hostScope">
+                <a class="dropdown-item" href="#" onclick="component.hostScopeChange('{hostScope}');return false;">{hostScope}</a>
+            </div>
+        </div>
+        <div class="btn-group" role="group">
+            <button id="logScopeDrop" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                Log
+            </button>
+            <div class="dropdown-menu" repeater="logScope">
+                <a class="dropdown-item" href="#" onclick="component.logScopeChange('{logScope}');return false;">{logScopeLabel}</a>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group input-group" role="group">
+        <input  id = "patternInput" class="form-control log-search-input" type="text" placeholder="*" onfocusout="component.searchPatternSet()">
+        <button id = "searchButton" class="btn btn-primary" type="button" targetId="searchView" onclick="component.search()">Search</button>
+
+    </div>
+</div>
+
+<canvas id="graphCanvas" width="1110px" height="75"></canvas>
+<div id="logTableContainer" class="log-table-container" repeater="row">{host}   {time}   {line}  {tags}</div>
+</div>

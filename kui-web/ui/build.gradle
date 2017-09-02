@@ -1,0 +1,72 @@
+group 'org.whiteicesecurity'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.1.4-2'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin2js'
+
+compileKotlin2Js.kotlinOptions.outputFile = "${project.rootDir}/white-ice-web-server/ui/build/classes/main/ui.js"
+compileKotlin2Js.kotlinOptions.sourceMap = true
+
+task copySources(type: Copy) {
+    from "${project.rootDir}/white-ice-web-server/ui/src/main/kotlin"
+    into "${project.rootDir}/white-ice-web-server/build/resources/main"
+}
+task copySources2(type: Copy) {
+    from "${project.rootDir}/white-ice-web-server/ui/build/classes/main"
+    into "${project.rootDir}/white-ice-web-server/build/classes/main"
+}
+task copySources3(type: Copy) {
+    from "${project.rootDir}/white-ice-web-server/ui/build/resources/main"
+    into "${project.rootDir}/white-ice-web-server/build/resources/main"
+}
+
+task copyIdeSources(type: Copy) {
+    from "${project.rootDir}/white-ice-web-server/ui/src/main/kotlin"
+    into "${project.rootDir}/white-ice-web-server/out/production/classes"
+}
+task copyIdeSources2(type: Copy) {
+    from "${project.rootDir}/white-ice-web-server/ui/out/production/classes"
+    into "${project.rootDir}/white-ice-web-server/out/production/resources"
+}
+task copyIdeSources3(type: Copy) {
+    from "${project.rootDir}/white-ice-web-server/ui/out/production/resources"
+    into "${project.rootDir}/white-ice-web-server/out/production/resources"
+}
+
+compileKotlin2Js.doLast {
+    configurations.compile.each { File file ->
+        copy {
+            includeEmptyDirs = false
+
+            from zipTree(file.absolutePath)
+            into "${project.rootDir}/white-ice-web-server/ui/build/classes/main/lib"
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+            }
+        }
+    }
+
+    tasks.copySources.execute()
+    tasks.copySources2.execute()
+    tasks.copySources3.execute()
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+}
+

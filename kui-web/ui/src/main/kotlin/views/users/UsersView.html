@@ -1,0 +1,165 @@
+<div class="container">
+
+<h2>Users</h2>
+
+<div class="btn-group spacer" role="group">
+    <button type="button" class="btn btn-secondary" onclick="component.add()">Add</button>
+    <button type="button" class="btn btn-secondary" onclick="component.edit()">Edit</button>
+    <button type="button" class="btn btn-secondary" onclick="component.remove()">Remove</button>
+</div>
+
+<div class="table-responsive spacer">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="w-1">&nbsp;</th>
+            <th class="w-25">Username</th>
+            <th class="w-50">Email</th>
+            <th class="w-25">Groups</th>
+            <th class="w-25">Created</th>
+            <th class="w-25">Modified</th>
+        </tr>
+        </thead>
+        <tbody repeater="users">
+            <tr>
+                <td class="vcenter"><input type="checkbox" id="{id}" modelId="{username}"/></td>
+                <td nowrap>{username}</td>
+                <td nowrap>{email}</td>
+                <td nowrap>{groups}</td>
+                <td nowrap>{created}</td>
+                <td nowrap>{modified}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="addUserModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Add user</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="addUserForm" class="form" action="#">
+                    <div class="form-group">
+                        <label for="addUserUsernameInput">Username</label>
+                        <input type="text" id="addUserUsernameInput" class="form-control" placeholder="first.last" pattern=".{3,30}" required autofocus>
+                        <div class="form-control-feedback" hidden>Please enter username.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addUserEmailInput">Email address</label>
+                        <input type="email" id="addUserEmailInput" class="form-control" placeholder="first.last@my.domain" required autofocus>
+                        <div class="form-control-feedback" hidden>Please enter email.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addUserPasswordInput">Password</label>
+                        <input type="password" id="addUserPasswordInput" class="form-control" placeholder="" pattern=".{12,30}" required>
+                        <div class="form-control-feedback" hidden>Please enter password.</div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <label class="form-check-label"><input class="form-check-input" id="addUserAdminInput" type="checkbox" value="">Admin</label>
+                        </div>
+                    </div>
+                    <div class="spacer">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" onclick="component.create()">Create</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="editUserModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Update user</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="editUserForm" class="form" action="#">
+                    <div class="form-group">
+                        <label for="editUserUsernameInput">Username</label>
+                        <input type="text" id="editUserUsernameInput" class="form-control" placeholder="first.last" pattern=".{3,30}" readonly>
+                        <div class="form-control-feedback" hidden>Please enter username.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserEmailInput">Email address</label>
+                        <input type="email" id="editUserEmailInput" class="form-control" placeholder="first.last@my.domain" required autofocus>
+                        <div class="form-control-feedback" hidden>Please enter email.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editUserPasswordInput">Password</label>
+                        <input type="password" id="editUserPasswordInput" class="form-control" placeholder="" pattern=".{12,30}">
+                        <div class="form-control-feedback" hidden>Please enter password.</div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <label class="form-check-label"><input class="form-check-input" id="editUserAdminInput" type="checkbox" value="">Admin</label>
+                        </div>
+                    </div>
+                    <div class="spacer">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" onclick="component.update()">Save</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="removeUserModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Remove user</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="removeUserForm" class="form" action="#">
+                    <div class="form-group">
+                        <label for="removeUserUsernameInput">Username</label>
+                        <input type="text" id="removeUserUsernameInput" class="form-control" placeholder="first.last" pattern=".{3,30}" readonly>
+                        <div class="form-control-feedback" hidden>Please enter username.</div>
+                    </div>
+                    <div class="spacer">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" onclick="component.delete()">Delete</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>

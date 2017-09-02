@@ -1,0 +1,42 @@
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse container">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="index.html#">White Ice</a>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item" view="LogView" component="NavigationItem" roles="user">
+                <a class="nav-link" href="index.html#log">Log</a>
+            </li>
+            <li class="nav-item dropdown" roles="user">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown">Settings</a>
+                <div class="dropdown-menu">
+                    <div view="TaggersView" component="NavigationItem">
+                        <a class="dropdown-item" href="index.html#taggers">Taggers</a>
+                    </div>
+                    <div view="ActivityAlertsView" component="NavigationItem">
+                        <a class="dropdown-item" href="index.html#activityAlerts">Activity Alerts</a>
+                    </div>
+                    <div view="HostsView" component="NavigationItem" roles="admin">
+                        <a class="dropdown-item" href="index.html#hosts">Hosts</a>
+                    </div>
+                    <div view="UsersView" component="NavigationItem" roles="admin">
+                        <a class="dropdown-item" href="index.html#users">Users</a>
+                    </div>
+                    <div view="PasswordChangeView" component="NavigationItem">
+                        <a class="dropdown-item" href="index.html#passwordChange">Change password</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item" view="LoginView" component="NavigationItem" roles="">
+                <a class="nav-link" href="index.html#login">Login</a>
+            </li>
+            <li class="nav-item" roles="user">
+                <a class="nav-link" href="index.html#" onclick="component.logout()">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>

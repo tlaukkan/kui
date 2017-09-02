@@ -1,0 +1,99 @@
+html {
+}
+
+pre {
+  white-space: pre-wrap;
+  margin-bottom: 0;
+}
+
+.starter-template {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin {
+  width: 300px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-signin .form-group {
+  margin-bottom: 0;
+}
+
+.form-signin .form-control-feedback {
+  margin-bottom: .25rem;
+}
+
+.alert {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  z-index: 10000;
+}
+
+.alert .container {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 0px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.spacer {
+  margin-top: 20px; /* define margin as you see fit */
+}
+
+.form-check-input:only-child {
+  position: absolute;
+}
+
+.vertical-center {
+  min-height: 60%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 60vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+
+.log-search-input {
+  width: 400px !important;
+}
+
+.log-table-container {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  white-space: pre;
+  font-size: 0.66em;
+  font-family: Consolas, monaco, monospace;
+  table-layout: fixed;
+  padding: 0em 0em;
+  border: 0;
+  line-height: 1.5;
+}
+
+.graphCanvas {
+  margin-bottom: -10px;
+}
+
+.hidden {
+  visibility: hidden;
+}

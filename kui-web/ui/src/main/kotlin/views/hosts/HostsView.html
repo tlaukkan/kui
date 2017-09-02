@@ -1,0 +1,123 @@
+<div class="container">
+
+<h2>Hosts</h2>
+
+<div class="btn-group spacer" role="group">
+    <button type="button" class="btn btn-secondary" onclick="component.add()">Add</button>
+    <button type="button" class="btn btn-secondary" onclick="component.edit()">Edit</button>
+    <button type="button" class="btn btn-secondary" onclick="component.removeConfirmation()">Remove</button>
+</div>
+
+<div class="table-responsive spacer">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width: 1%">&nbsp;</th>
+                <th>Environment Type</th>
+                <th>Environment</th>
+                <th>Host Type</th>
+                <th>Host</th>
+                <th>Owner</th>
+            </tr>
+        </thead>
+        <tbody repeater="tableRepeater">
+            <tr>
+                <td class="vcenter"><input type="checkbox" rowId="{key}"/></td>
+                <td>{environmentType}</td>
+                <td>{environment}</td>
+                <td>{hostType}</td>
+                <td>{key}</td>
+                <td>{owner}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="editModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Edit host</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="editForm" class="form" action="#">
+                    <div class="form-group">
+                        <label for="environmentTypeInput">Environment Type</label>
+                        <input type="text" id="environmentTypeInput" model="environmentType" class="form-control" placeholder="" pattern=".{3,200}" autofocus required>
+                        <div class="form-control-feedback" hidden>Please enter environment type.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="environmentInput">Environment</label>
+                        <input type="text" id="environmentInput" model="environment" class="form-control" placeholder="" pattern=".{3,200}" autofocus required>
+                        <div class="form-control-feedback" hidden>Please enter environment.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="hostTypeInput">Host Type</label>
+                        <input type="text" id="hostTypeInput" model="hostType" class="form-control" placeholder="" pattern=".{3,200}" autofocus required>
+                        <div class="form-control-feedback" hidden>Please enter host type.</div>
+                    </div>
+                    <div class="form-group" hidden>
+                        <label for="keyInput">Host</label>
+                        <input type="text" id="keyInput" model="key" class="form-control" pattern=".{3,200}" autofocus required>
+                        <div class="form-control-feedback" hidden>Please enter host name.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ownerInput">Owner</label>
+                        <input type="text" id="ownerInput" model="owner" class="form-control" placeholder="" pattern=".{3,200}" autofocus required>
+                        <div class="form-control-feedback" hidden>Please enter owner account.</div>
+                    </div>
+
+                    <div class="spacer">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" onclick="component.save()">Save</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" onclick="component.cancel()">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="removeModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Remove host</h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="removeForm" class="form" action="#">
+                    <div class="form-group">
+                        <label for="removeKeyInput">Key</label>
+                        <input type="text" id="removeKeyInput" model="key" class="form-control" placeholder="first.last" pattern=".{3,30}" required autofocus readonly>
+                        <div class="form-control-feedback" hidden>Please enter host key.</div>
+                    </div>
+                    <div class="spacer">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" onclick="component.remove()">Delete</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</div>

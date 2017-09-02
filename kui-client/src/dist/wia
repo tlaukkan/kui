@@ -1,0 +1,55 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          white-ice-agent
+# Required-Start:    $local_fs $network
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: White Ice Agent
+# Description:       White Ice Agent is an agent for White Ice host monitoring system
+### END INIT INFO
+SERVICE_NAME=white-ice-agent
+HOME_DIRECTORY=/opt/white-ice-agent
+LOG_FILE_NAME=start.log
+JAR_FILE_NAME=white-ice-agent-1.0-SNAPSHOT.jar
+PID_PATH_NAME=/opt/white-ice-agent/white-ice-agent.pid
+case $1 in
+    start)
+        echo "Starting $SERVICE_NAME ..."
+        if [ ! -f $PID_PATH_NAME ]; then
+            cd $HOME_DIRECTORY
+            java -jar $JAR_FILE_NAME &> $LOG_FILE_NAME > $LOG_FILE_NAME &
+            echo $! > $PID_PATH_NAME
+            echo "$SERVICE_NAME started ..."
+        else
+            echo "$SERVICE_NAME is already running ..."
+        fi
+    ;;
+    stop)
+        if [ -f $PID_PATH_NAME ]; then
+            PID=$(cat $PID_PATH_NAME);
+            echo "$SERVICE_NAME stopping ..."
+            kill $PID;
+            echo "$SERVICE_NAME stopped ..."
+            rm $PID_PATH_NAME
+        else
+            echo "$SERVICE_NAME is not running ..."
+        fi
+    ;;
+    restart)
+        if [ -f $PID_PATH_NAME ]; then
+            PID=$(cat $PID_PATH_NAME);
+            echo "$SERVICE_NAME stopping ...";
+            kill $PID;
+            echo "$SERVICE_NAME stopped ...";
+            rm $PID_PATH_NAME
+            echo "$SERVICE_NAME starting ..."
+            cd $HOME_DIRECTORY
+            java -jar $JAR_FILE_NAME /tmp &> $LOG_FILE_NAME > $LOG_FILE_NAME &
+            echo $! > $PID_PATH_NAME
+            echo "$SERVICE_NAME started ..."
+        else
+            echo "$SERVICE_NAME is not running ..."
+        fi
+    ;;
+esac
