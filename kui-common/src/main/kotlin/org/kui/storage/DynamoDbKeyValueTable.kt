@@ -1,14 +1,40 @@
 package org.kui.storage
 
+import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Item
+import com.amazonaws.services.dynamodbv2.document.Table
 import java.nio.ByteBuffer
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap
+import com.amazonaws.services.dynamodbv2.model.*
+import java.util.ArrayList
 
+
+fun getKeyValueTable(dynamoDB : DynamoDB, tableName: String) : Table {
+    if (dynamoDB.getTable(tableName) == null) {
+        val attributeDefinitions = ArrayList<AttributeDefinition>()
+        attributeDefinitions.add(AttributeDefinition().withAttributeName("ClassType").withAttributeType("S"))
+        attributeDefinitions.add(AttributeDefinition().withAttributeName("ItemKey").withAttributeType("S"))
+
+        val keySchema = ArrayList<KeySchemaElement>()
+        keySchema.add(KeySchemaElement().withAttributeName("ClassType").withKeyType(KeyType.HASH))
+        keySchema.add(KeySchemaElement().withAttributeName("ItemKey").withKeyType(KeyType.RANGE))
+
+        val request = CreateTableRequest().withTableName(tableName).withKeySchema(keySchema)
+                .withAttributeDefinitions(attributeDefinitions).withProvisionedThroughput(
+                ProvisionedThroughput().withReadCapacityUnits(1L).withWriteCapacityUnits(1L))
+
+        val table = dynamoDB.createTable(request)
+
+        table.waitForActive()
+    }
+
+    return dynamoDB.getTable(tableName)
+}
 
 class DynamoDbKeyValueTable : KeyValueTable, DynamoDbTable() {
 
-    val table = dynamoDB.getTable("KeyValue")
+    val table = getKeyValueTable(dynamoDb, "KeyValue")
 
     override fun add(key: String, type: String, bytes: ByteArray) {
         val item = Item()

@@ -4,7 +4,9 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
+import com.amazonaws.services.dynamodbv2.model.*
 import org.kui.util.getProperty
+import java.util.ArrayList
 
 open class DynamoDbTable {
     val client = AmazonDynamoDBClientBuilder.standard()
@@ -13,5 +15,6 @@ open class DynamoDbTable {
                     getProperty("dynamodb", "storage.password"))))
             .withRegion(getProperty("dynamodb", "storage.region"))
             .build()
-    val dynamoDB = DynamoDB(client)
+    val dynamoDb = DynamoDB(client)
+
 }
