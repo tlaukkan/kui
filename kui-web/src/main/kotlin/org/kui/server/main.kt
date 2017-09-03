@@ -18,7 +18,7 @@ import org.kui.server.api.users.login.*
 import org.kui.server.rest.RestHandler
 import org.kui.server.work.CoordinationWorker
 import org.kui.server.workers.ActivityAlertWorker
-import org.kui.storage.CassandraKeyValueTable
+import org.kui.storage.cassandra.CassandraKeyValueTable
 import org.kui.util.getProperty
 import org.kui.util.getZoneOffsetMillis
 import org.kui.util.setProperty

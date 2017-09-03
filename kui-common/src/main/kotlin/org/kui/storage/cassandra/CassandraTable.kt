@@ -1,4 +1,4 @@
-package org.kui.storage
+package org.kui.storage.cassandra
 
 import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.NettySSLOptions

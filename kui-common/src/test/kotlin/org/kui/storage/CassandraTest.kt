@@ -1,10 +1,13 @@
 package org.kui.storage
 
+import getCassandraCredentials
 import org.apache.log4j.xml.DOMConfigurator
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
 import org.kui.model.TimeValue
+import org.kui.storage.cassandra.CassandraKeyValueTable
+import org.kui.storage.cassandra.CassandraTimeValueTable
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
@@ -21,7 +24,7 @@ class CassandraTest {
         val testTime = Date()
         val testValue = "test-log-line"
 
-        val testTable = CassandraTimeValueTable(getStorageCredentials("storage"), "testkeyspace", "test_time_value", true)
+        val testTable = CassandraTimeValueTable(getCassandraCredentials("storage"), "testkeyspace", "test_time_value", true)
 
         testTable.insert(testContainer, testKey, listOf(TimeValue(testTime, testValue.toByteArray())))
 
@@ -61,7 +64,7 @@ class CassandraTest {
     fun testKeyValueTable() {
         DOMConfigurator.configure("log4j.xml")
 
-        val keyValueTable : KeyValueTable = CassandraKeyValueTable(getStorageCredentials("storage"), "whiteice3", "test_key_value")
+        val keyValueTable : KeyValueTable = CassandraKeyValueTable(getCassandraCredentials("storage"), "whiteice3", "test_key_value")
 
         val testKey = "test-key"
         val testType = "test-type"

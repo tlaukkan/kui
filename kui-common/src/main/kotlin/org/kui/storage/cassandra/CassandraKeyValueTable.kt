@@ -1,6 +1,8 @@
-package org.kui.storage
+package org.kui.storage.cassandra
 
 import com.datastax.driver.core.*
+import org.kui.storage.KeyValueRow
+import org.kui.storage.KeyValueTable
 import java.nio.ByteBuffer
 
 open class CassandraKeyValueTable(credentials: CassandraCredentials, keyspace: String, table: String, truncate: Boolean = false) : CassandraTable(credentials, keyspace), KeyValueTable {

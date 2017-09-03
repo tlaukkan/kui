@@ -5,8 +5,8 @@ import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
 import org.kui.model.TimeValue
-import java.time.LocalDate
-import java.time.ZoneOffset
+import org.kui.storage.dynamodb.DynamoDbKeyValueTable
+import org.kui.storage.dynamodb.DynamoDbTimeValueTable
 import java.util.*
 
 class DynamoDbTest {

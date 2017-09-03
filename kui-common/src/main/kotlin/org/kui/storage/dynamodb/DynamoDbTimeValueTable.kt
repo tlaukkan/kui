@@ -1,4 +1,4 @@
-package org.kui.storage
+package org.kui.storage.dynamodb
 
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Item
@@ -12,6 +12,7 @@ import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap
 import com.amazonaws.services.dynamodbv2.model.*
 import org.kui.model.TimeValueRow
+import org.kui.storage.TimeValueTable
 import java.nio.ByteBuffer
 
 fun getTimeValueTable(dynamoDb: DynamoDB, tableName: String) : Table {

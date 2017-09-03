@@ -1,4 +1,4 @@
-package org.kui.storage
+package org.kui.storage.dynamodb
 
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Item
@@ -7,6 +7,8 @@ import java.nio.ByteBuffer
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap
 import com.amazonaws.services.dynamodbv2.model.*
+import org.kui.storage.KeyValueRow
+import org.kui.storage.KeyValueTable
 import java.util.ArrayList
 
 

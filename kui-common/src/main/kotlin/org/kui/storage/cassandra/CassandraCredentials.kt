@@ -1,4 +1,4 @@
-package org.kui.storage
+package org.kui.storage.cassandra
 
 data class CassandraCredentials(
         val cassandraHost: String,
