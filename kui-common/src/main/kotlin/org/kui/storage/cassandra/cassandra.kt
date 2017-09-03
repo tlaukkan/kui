@@ -4,15 +4,13 @@ import org.kui.util.getProperty
 import java.util.*
 
 fun getCassandraCredentials(): CassandraCredentials {
-    val propertyCategoryKey = "storage"
-    val storageHost = getProperty(propertyCategoryKey, "cassandra.host")
-    val storagePort = getProperty(propertyCategoryKey, "cassandra.port").toInt()
-    val storageUsername = getProperty(propertyCategoryKey, "cassandra.username")
-    val storagePassword = getProperty(propertyCategoryKey, "cassandra.password")
-    val keyStorePath = getProperty(propertyCategoryKey, "cassandra.keystore.path")
-    val keyStorePassword = getProperty(propertyCategoryKey, "cassandra.keystore.password")
-    val storage = CassandraCredentials(storageHost, storagePort, storageUsername, storagePassword, keyStorePath, keyStorePassword)
-    return storage
+    val storageHost = getProperty("storage", "cassandra.host")
+    val storagePort = getProperty("storage", "cassandra.port").toInt()
+    val storageUsername = getProperty("storage", "cassandra.username")
+    val storagePassword = getProperty("storage", "cassandra.password")
+    val keyStorePath = getProperty("storage", "cassandra.keystore.path")
+    val keyStorePassword = getProperty("storage", "cassandra.keystore.password")
+    return CassandraCredentials(storageHost, storagePort, storageUsername, storagePassword, keyStorePath, keyStorePassword)
 }
 
 private val timeUuidGeneratorForComparison = TimeUuidGenerator("", false)

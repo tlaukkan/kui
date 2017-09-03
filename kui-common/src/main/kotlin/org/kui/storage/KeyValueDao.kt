@@ -3,10 +3,12 @@ package org.kui.storage
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.kui.security.crypto
 import org.kui.storage.cassandra.CassandraKeyValueTable
+import org.kui.storage.dynamodb.DynamoDbKeyValueTable
+import org.kui.util.getProperty
 
-class KeyValueDao(table: String) {
+class KeyValueDao {
 
-    val keyValueTable : KeyValueTable = CassandraKeyValueTable(table)
+    val keyValueTable : KeyValueTable = if ("cassandra".equals(getProperty("storage", "storage.type"))) { CassandraKeyValueTable("key_value") } else { DynamoDbKeyValueTable() }
 
     fun add(key: String, value: Any) {
         val type = value.javaClass.name
