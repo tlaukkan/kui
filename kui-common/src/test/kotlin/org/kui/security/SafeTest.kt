@@ -14,7 +14,7 @@ class SafeTest {
     fun testSafe() {
         DOMConfigurator.configure("log4j.xml")
 
-        contextService.setThreadContext(SecurityContext(USER_DEFAULT_ADMIN, listOf(GROUP_ADMIN), ByteArray(0), Date()))
+        contextService.setThreadContext(SecurityContext(USER_DEFAULT_ADMIN, listOf(GROUP_USER, GROUP_ADMIN), ByteArray(0), Date()))
 
         val testKey = "test.key"
         val testValue = "test.value"
