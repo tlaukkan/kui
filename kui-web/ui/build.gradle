@@ -18,29 +18,29 @@ compileKotlin2Js.kotlinOptions.outputFile = "${project.rootDir}/white-ice-web-se
 compileKotlin2Js.kotlinOptions.sourceMap = true
 
 task copySources(type: Copy) {
-    from "${project.rootDir}/white-ice-web-server/ui/src/main/kotlin"
-    into "${project.rootDir}/white-ice-web-server/build/resources/main"
+    from "${project.rootDir}/kui-web/ui/src/main/kotlin"
+    into "${project.rootDir}/kui-web/build/resources/main"
 }
 task copySources2(type: Copy) {
-    from "${project.rootDir}/white-ice-web-server/ui/build/classes/main"
-    into "${project.rootDir}/white-ice-web-server/build/classes/main"
+    from "${project.rootDir}/kui-web/ui/build/classes/main"
+    into "${project.rootDir}/kui-web/build/classes/main"
 }
 task copySources3(type: Copy) {
-    from "${project.rootDir}/white-ice-web-server/ui/build/resources/main"
-    into "${project.rootDir}/white-ice-web-server/build/resources/main"
+    from "${project.rootDir}/kui-web/ui/build/resources/main"
+    into "${project.rootDir}/kui-web/build/resources/main"
 }
 
 task copyIdeSources(type: Copy) {
-    from "${project.rootDir}/white-ice-web-server/ui/src/main/kotlin"
-    into "${project.rootDir}/white-ice-web-server/out/production/classes"
+    from "${project.rootDir}/kui-web/ui/src/main/kotlin"
+    into "${project.rootDir}/kui-web/out/production/classes"
 }
 task copyIdeSources2(type: Copy) {
-    from "${project.rootDir}/white-ice-web-server/ui/out/production/classes"
-    into "${project.rootDir}/white-ice-web-server/out/production/resources"
+    from "${project.rootDir}/kui-web/ui/out/production/classes"
+    into "${project.rootDir}/kui-web/out/production/resources"
 }
 task copyIdeSources3(type: Copy) {
-    from "${project.rootDir}/white-ice-web-server/ui/out/production/resources"
-    into "${project.rootDir}/white-ice-web-server/out/production/resources"
+    from "${project.rootDir}/kui-web/ui/out/production/resources"
+    into "${project.rootDir}/kui-web/out/production/resources"
 }
 
 compileKotlin2Js.doLast {

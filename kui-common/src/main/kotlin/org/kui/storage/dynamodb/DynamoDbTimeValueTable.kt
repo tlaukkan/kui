@@ -61,15 +61,26 @@ class DynamoDbTimeValueTable(val type: String) : TimeValueTable, DynamoDbTable()
 
     override fun insert(container: String, key: String, timeValues: List<TimeValue>) {
         val fullKey = "$type:$container:$key"
-        val timeValueItems = mutableListOf<Item>()
+
+        var timeValueItems = mutableListOf<Item>()
+        var count = 0
         for (timeValue in timeValues) {
             val item = Item().withPrimaryKey("ItemKey", fullKey, "Id", UUID.randomUUID().toString())
                     .withNumber("ItemTime", timeValue.time.time)
                     .withNumber("Received", System.currentTimeMillis())
                     .withBinary("ItemValue", ByteBuffer.wrap(timeValue.value))
             timeValueItems.add(item)
+            count ++
+            if (count == 25) {
+                dynamoDb.batchWriteItem(TableWriteItems("TimeValue").withItemsToPut(timeValueItems))
+                timeValueItems = mutableListOf<Item>()
+                count = 0
+            }
         }
-        dynamoDb.batchWriteItem(TableWriteItems("TimeValue").withItemsToPut(timeValueItems))
+
+        if (count > 0) {
+            dynamoDb.batchWriteItem(TableWriteItems("TimeValue").withItemsToPut(timeValueItems))
+        }
     }
 
     override fun select(beginId: UUID?, beginTime: Date, endTime_: Date, containers: List<String>, keys: List<String>): TimeValueResult {

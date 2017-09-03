@@ -11,7 +11,7 @@ import java.util.*
 import kotlin.concurrent.thread
 
 
-class WhiteIceAppender : AppenderSkeleton() {
+class KuiAppender : AppenderSkeleton() {
 
     var events = LinkedList<LoggingEvent>()
 

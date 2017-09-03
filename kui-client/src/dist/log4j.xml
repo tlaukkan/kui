@@ -20,7 +20,7 @@
         </layout>
     </appender>
 
-    <appender class="org.kui.log4j.WhiteIceAppender" name="ice">
+    <appender class="org.kui.log4j.KuiAppender" name="ice">
     </appender>
 
     <logger additivity="true" name="ilogi">

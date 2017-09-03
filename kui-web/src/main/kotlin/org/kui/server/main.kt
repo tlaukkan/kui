@@ -38,7 +38,7 @@ fun main(args : Array<String>) {
 
     val server = configureServer()
 
-    log.info("White Ice Server (${InetAddress.getLocalHost().getHostName()} started.")
+    log.info("Server ${InetAddress.getLocalHost().getHostName()} started.")
 
     log.info("Time Zone offset: " + getZoneOffsetMillis())
 
@@ -145,7 +145,7 @@ private fun createSSLContext(keyStore: KeyStore, keyPassword: String, trustStore
 }
 
 private fun loadKeyStore(keyStorePath: String, keyStorePassword: String): KeyStore {
-    var stream = CassandraKeyValueTable::class.java.classLoader.getResourceAsStream(keyStorePath)
+    var stream = Helper::class.java.classLoader.getResourceAsStream(keyStorePath)
     if (stream == null) {
         stream = Files.newInputStream(Paths.get(keyStorePath)) ?: throw RuntimeException("Could not load keystore")
     }
@@ -167,3 +167,5 @@ private fun loadDefaultTrustStore(): KeyStore {
 
     return keyStore
 }
+
+private class Helper
