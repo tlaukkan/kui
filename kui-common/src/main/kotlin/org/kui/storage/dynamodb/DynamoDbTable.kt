@@ -9,9 +9,9 @@ import org.kui.util.getProperty
 open class DynamoDbTable {
     val client = AmazonDynamoDBClientBuilder.standard()
             .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials(
-                    getProperty("dynamodb", "storage.username"),
-                    getProperty("dynamodb", "storage.password"))))
-            .withRegion(getProperty("dynamodb", "storage.region"))
+                    getProperty("storage", "dynamodb.username"),
+                    getProperty("storage", "dynamodb.password"))))
+            .withRegion(getProperty("storage", "dynamodb.region"))
             .build()
     val dynamoDb = DynamoDB(client)
 

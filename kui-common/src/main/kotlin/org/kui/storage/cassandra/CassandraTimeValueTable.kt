@@ -15,7 +15,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 
-open class CassandraTimeValueTable(credentials: CassandraCredentials, keyspace: String, table: String, truncate: Boolean = false) : CassandraTable(credentials, keyspace), TimeValueTable {
+open class CassandraTimeValueTable(table: String, truncate: Boolean = false) : CassandraTable(), TimeValueTable {
 
     val logTimeUuidGenerators = mutableMapOf<String, TimeUuidGenerator>()
 

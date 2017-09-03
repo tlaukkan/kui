@@ -1,13 +1,12 @@
 package org.kui.storage
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import getCassandraCredentials
 import org.kui.security.crypto
 import org.kui.storage.cassandra.CassandraKeyValueTable
 
-class KeyValueDao(keyspace: String, table: String, truncate: Boolean = false) {
+class KeyValueDao(table: String) {
 
-    val keyValueTable : KeyValueTable = CassandraKeyValueTable(getCassandraCredentials("storage"), keyspace, table, truncate)
+    val keyValueTable : KeyValueTable = CassandraKeyValueTable(table)
 
     fun add(key: String, value: Any) {
         val type = value.javaClass.name

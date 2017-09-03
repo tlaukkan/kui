@@ -1,6 +1,5 @@
 package org.kui.storage
 
-import getCassandraCredentials
 import org.kui.model.TimeValue
 import org.kui.model.TimeValueResult
 import org.kui.model.TimeValueRow
@@ -8,9 +7,9 @@ import org.kui.security.crypto
 import org.kui.storage.cassandra.CassandraTimeValueTable
 import java.util.*
 
-class TimeValueDao(keyspace: String, table: String, truncate: Boolean = false) {
+class TimeValueDao(table: String) {
 
-    val timeValueTable = CassandraTimeValueTable(getCassandraCredentials("storage"), keyspace, table, truncate)
+    val timeValueTable = CassandraTimeValueTable(table)
 
     fun add(container: String, key: String, timeValues: List<TimeValue>) {
         val encryptedValues = mutableListOf<TimeValue>()

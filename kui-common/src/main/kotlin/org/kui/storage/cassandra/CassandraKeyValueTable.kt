@@ -5,7 +5,7 @@ import org.kui.storage.KeyValueRow
 import org.kui.storage.KeyValueTable
 import java.nio.ByteBuffer
 
-open class CassandraKeyValueTable(credentials: CassandraCredentials, keyspace: String, table: String, truncate: Boolean = false) : CassandraTable(credentials, keyspace), KeyValueTable {
+open class CassandraKeyValueTable(table: String, truncate: Boolean = false) : CassandraTable(), KeyValueTable {
 
     private val insert: PreparedStatement
     private val delete: PreparedStatement

@@ -24,7 +24,7 @@ class CassandraTest {
         val testTime = Date()
         val testValue = "test-log-line"
 
-        val testTable = CassandraTimeValueTable(getCassandraCredentials("storage"), "testkeyspace", "test_time_value", true)
+        val testTable = CassandraTimeValueTable("test_time_value", true)
 
         testTable.insert(testContainer, testKey, listOf(TimeValue(testTime, testValue.toByteArray())))
 
@@ -46,7 +46,7 @@ class CassandraTest {
 
         val testValue = TimeValue(Date(), "test-log-line".toByteArray())
 
-        val testDao = TimeValueDao("testkeyspace", "test_time_value", true)
+        val testDao = TimeValueDao("test_time_value")
 
         testDao.add(testContainer, testKey, listOf(testValue))
 
@@ -64,7 +64,7 @@ class CassandraTest {
     fun testKeyValueTable() {
         DOMConfigurator.configure("log4j.xml")
 
-        val keyValueTable : KeyValueTable = CassandraKeyValueTable(getCassandraCredentials("storage"), "whiteice3", "test_key_value")
+        val keyValueTable : KeyValueTable = CassandraKeyValueTable("test_key_value")
 
         val testKey = "test-key"
         val testType = "test-type"

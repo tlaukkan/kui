@@ -3,14 +3,18 @@ package org.kui.storage.cassandra
 import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.NettySSLOptions
 import com.datastax.driver.core.Session
+import getCassandraCredentials
 import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.SslProvider
+import org.kui.util.getProperty
 import java.io.File
 import java.io.FileInputStream
 import java.security.KeyStore
 import javax.net.ssl.TrustManagerFactory
 
-open class CassandraTable(credentials: CassandraCredentials, keyspace: String) {
+open class CassandraTable {
+    protected val credentials = getCassandraCredentials()
+    protected val keyspace = getProperty("storage", "cassandra.keyspace")
     protected val cluster: Cluster
     protected val session: Session
 
