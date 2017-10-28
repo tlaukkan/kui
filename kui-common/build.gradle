@@ -38,6 +38,9 @@ dependencies {
 
     compile 'javax.mail:mail:1.4'
     compile 'com.amazonaws:aws-java-sdk-dynamodb:1.11.186'
+    compile 'org.eclipse.persistence:javax.persistence:2.0.0'
+    compile 'org.eclipse.persistence:eclipselink:2.6.5'
+    compile 'com.h2database:h2:1.4.196'
 
     compile project(':kui-api')
 

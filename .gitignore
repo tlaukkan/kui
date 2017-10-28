@@ -1,6 +1,7 @@
 .gradle
 .idea
 .track
+target
 gradle
 build
 out
