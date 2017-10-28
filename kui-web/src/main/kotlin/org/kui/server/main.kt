@@ -6,6 +6,8 @@ import io.undertow.server.handlers.BlockingHandler
 import io.undertow.server.handlers.resource.ClassPathResourceManager
 import io.undertow.server.handlers.resource.FileResourceManager
 import io.undertow.server.handlers.resource.ResourceHandler
+import io.undertow.servlet.Servlets
+import io.undertow.websockets.jsr.WebSocketDeploymentInfo
 import org.apache.log4j.xml.DOMConfigurator
 import org.slf4j.LoggerFactory
 import org.kui.agent.Monitor
@@ -22,6 +24,8 @@ import org.kui.storage.cassandra.CassandraKeyValueTable
 import org.kui.util.getProperty
 import org.kui.util.getZoneOffsetMillis
 import org.kui.util.setProperty
+import org.xnio.OptionMap
+import org.xnio.Xnio
 import java.io.File
 import java.io.FileInputStream
 import java.net.InetAddress
@@ -89,6 +93,17 @@ fun configureServer(): Undertow {
     restHandler.processors.add(PostRecord())
     restHandler.processors.add(PutRecord())
 
+    val webSocketDeploymentInfo = WebSocketDeploymentInfo()
+            .addEndpoint(SocketProxy::class.java)
+            .setWorker(Xnio.getInstance("nio", Undertow::class.java.classLoader).createWorker(OptionMap.builder().map))
+    val webSocketDeployment = Servlets.defaultContainer()
+            .addDeployment(Servlets.deployment()
+                    .setClassLoader(Helper::class.java.classLoader)
+                    .setContextPath("/")
+                    .setDeploymentName("embedded-websockets")
+                    .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, webSocketDeploymentInfo))
+    webSocketDeployment.deploy()
+
     val server : Undertow
     if ("production".equals(getProperty("web", "web.mode"))) {
         log.info("Production mode, loading resources from classpath.")
@@ -103,6 +118,7 @@ fun configureServer(): Undertow {
                         .addPrefixPath("/ui/static", ResourceHandler(ClassPathResourceManager(CassandraKeyValueTable::class.java.classLoader, "")))
                         .addPrefixPath("/ui/dynamic", ResourceHandler(ClassPathResourceManager(CassandraKeyValueTable::class.java.classLoader, "")))
                         .addPrefixPath("/api", BlockingHandler(restHandler))
+                        .addPrefixPath("/ws", webSocketDeployment.start())
                 )
                 .build()
         server.start()
@@ -120,6 +136,7 @@ fun configureServer(): Undertow {
                         .addPrefixPath("/ui/static", ResourceHandler(FileResourceManager(File("ui/src/main/resources"))))
                         .addPrefixPath("/ui/dynamic", ResourceHandler(FileResourceManager(File("ui/out/production/classes"))))
                         .addPrefixPath("/api", BlockingHandler(restHandler))
+                        .addPrefixPath("/ws", webSocketDeployment.start())
                 )
                 .build()
         server.start()

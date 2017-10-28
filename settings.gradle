@@ -2,6 +2,8 @@ rootProject.name = 'kui'
 include 'kui-api'
 include 'kui-common'
 include 'kui-client'
-include 'kui-web/ui'
+include 'ui'
 include 'kui-web'
+
+project(':ui').projectDir = file('kui-web/ui')
 

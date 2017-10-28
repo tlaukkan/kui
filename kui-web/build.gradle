@@ -35,7 +35,7 @@ dependencies {
     compile "org.slf4j:slf4j-log4j12:1.7.25"
 
     compile "io.undertow:undertow-servlet:1.4.12.Final"
-
+    compile 'io.undertow:undertow-websockets-jsr:1.4.12.Final'
     compile 'com.datastax.cassandra:cassandra-driver-core:3.3.0'
     compile 'io.netty:netty-tcnative-boringssl-static:2.0.5.Final'
     compile group: 'org.pojava', name: 'datetime', version: '1.0.2'
