@@ -4,6 +4,7 @@
     <persistence-unit name="storage" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>org.kui.storage.jpa.KeyValueEntity</class>
+        <class>org.kui.storage.jpa.TimeValueEntity</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />

@@ -8,9 +8,36 @@ import org.kui.model.TimeValue
 import org.kui.storage.dynamodb.DynamoDbKeyValueTable
 import org.kui.storage.dynamodb.DynamoDbTimeValueTable
 import org.kui.storage.jpa.JpaKeyValueTable
+import org.kui.storage.jpa.JpaTimeValueTable
 import java.util.*
 
 class JpaTest {
+
+    @Test
+    @Ignore
+    fun testTimeValueTable() {
+        DOMConfigurator.configure("log4j.xml")
+        val testContainer = "host-1"
+        val testKey = "/var/syslog"
+
+        val beginTime = Date()
+        Thread.sleep(100)
+
+        val testTable = JpaTimeValueTable("test_time_value")
+
+        testTable.insert(testContainer, testKey, listOf(
+                TimeValue(Date(), "test-log-line-1".toByteArray()),
+                TimeValue(Date(), "test-log-line-2".toByteArray()),
+                TimeValue(Date(), "test-log-line-3".toByteArray())))
+
+        Thread.sleep(100)
+
+        val endTime = Date()
+
+        Assert.assertEquals(3, testTable.select(null, beginTime, endTime, listOf(testContainer), listOf(testKey)).rows.size)
+
+        Assert.assertEquals(3, testTable.selectCount(beginTime, endTime, listOf(testContainer), listOf(testKey)).count)
+    }
 
     @Test
     @Ignore
