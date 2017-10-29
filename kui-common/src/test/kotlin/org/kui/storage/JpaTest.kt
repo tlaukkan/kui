@@ -14,7 +14,6 @@ import java.util.*
 class JpaTest {
 
     @Test
-    @Ignore
     fun testTimeValueTable() {
         DOMConfigurator.configure("log4j.xml")
         val testContainer = "host-1"
@@ -40,7 +39,6 @@ class JpaTest {
     }
 
     @Test
-    @Ignore
     fun testKeyValueTable() {
         DOMConfigurator.configure("log4j.xml")
         val testKey = "test-key"

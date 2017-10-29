@@ -6,12 +6,20 @@ import org.kui.model.TimeValueRow
 import org.kui.security.crypto
 import org.kui.storage.cassandra.CassandraTimeValueTable
 import org.kui.storage.dynamodb.DynamoDbTimeValueTable
+import org.kui.storage.jpa.JpaTimeValueTable
 import org.kui.util.getProperty
 import java.util.*
 
 class TimeValueDao(table: String) {
 
-    val timeValueTable : TimeValueTable = if ("cassandra".equals(getProperty("storage", "storage.type"))) {  CassandraTimeValueTable(table) } else { DynamoDbTimeValueTable(table) }
+    val timeValueTable : TimeValueTable =
+            if ("cassandra".equals(getProperty("storage", "storage.type"))) {
+                CassandraTimeValueTable(table)
+            } else if ("dynamodb".equals(getProperty("storage", "storage.type"))) {
+                DynamoDbTimeValueTable(table)
+            } else {
+                JpaTimeValueTable(table)
+            }
 
     fun add(container: String, key: String, timeValues: List<TimeValue>) {
         val encryptedValues = mutableListOf<TimeValue>()

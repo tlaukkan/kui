@@ -4,11 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.kui.security.crypto
 import org.kui.storage.cassandra.CassandraKeyValueTable
 import org.kui.storage.dynamodb.DynamoDbKeyValueTable
+import org.kui.storage.jpa.JpaKeyValueTable
 import org.kui.util.getProperty
 
 class KeyValueDao {
 
-    val keyValueTable : KeyValueTable = if ("cassandra".equals(getProperty("storage", "storage.type"))) { CassandraKeyValueTable("key_value") } else { DynamoDbKeyValueTable() }
+    val keyValueTable : KeyValueTable =
+            if ("cassandra".equals(getProperty("storage", "storage.type"))) {
+                CassandraKeyValueTable("key_value")
+            } else if ("dynamodb".equals(getProperty("storage", "storage.type"))) {
+                DynamoDbKeyValueTable()
+            } else {
+                JpaKeyValueTable()
+            }
 
     fun add(key: String, value: Any) {
         val type = value.javaClass.name
