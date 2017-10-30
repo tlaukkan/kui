@@ -90,7 +90,7 @@ fun send(smtpHost: String, smtpPort: String,
         val message = MimeMessage(session)
         message.setHeader("MIME-Version", "1.0")
         message.setHeader("Content-Type", multiPartContent.getContentType())
-        message.setHeader("X-Mailer", "White Ice")
+        message.setHeader("X-Mailer", "KUI")
         message.setSentDate(Date())
         message.setFrom(InternetAddress(from))
 

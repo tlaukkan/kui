@@ -18,3 +18,4 @@ white-ice-agent/log4j.xml
 white-ice-web-server/log4j.xml
 white-ice-web-server/src/dist
 *.sh
+data/

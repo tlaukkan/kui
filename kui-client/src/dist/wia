@@ -5,8 +5,8 @@
 # Required-Stop:     $local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: White Ice Agent
-# Description:       White Ice Agent is an agent for White Ice host monitoring system
+# Short-Description: KUI Agent
+# Description:       KUI Agent is an agent for KUI system
 ### END INIT INFO
 SERVICE_NAME=white-ice-agent
 HOME_DIRECTORY=/opt/white-ice-agent

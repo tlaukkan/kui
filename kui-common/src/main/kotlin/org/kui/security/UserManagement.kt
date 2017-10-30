@@ -3,14 +3,12 @@ package org.kui.security
 import org.slf4j.LoggerFactory
 import org.kui.security.model.*
 import org.kui.storage.keyValueDao
+import org.kui.util.getProperty
 import java.util.*
 
 class UserManagement {
 
     private val log = LoggerFactory.getLogger("org.whiteicesecurity.security")
-
-    private var privilegeCheckCacheFlushed = System.currentTimeMillis()
-    private val privilegeCheckCache = mutableMapOf<String, MutableMap<String, Boolean>>()
 
     init {
 
@@ -31,16 +29,18 @@ class UserManagement {
             contextService.setThreadContext(SecurityContext(systemUser.key!!, listOf(systemGroup.key!!, adminGroup.key!!), ByteArray(0), Date()))
 
             grantGroup(systemUser.key!!, GROUP_SYSTEM)
-
-            val defaultAdminUser = UserRecord(USER_DEFAULT_ADMIN, Date(), Date(), null, crypto.passwordHash(USER_DEFAULT_ADMIN, USER_DEFAULT_ADMIN))
-            keyValueDao.add(USER_DEFAULT_ADMIN, defaultAdminUser)
-
             grantGroup(systemUser.key!!, GROUP_ADMIN)
             grantGroup(systemUser.key!!, GROUP_USER)
 
+            val defaultAdminUser = UserRecord(USER_DEFAULT_ADMIN, Date(), Date(), null, crypto.passwordHash(USER_DEFAULT_ADMIN, getProperty("security","default.admin.user.password")))
+            keyValueDao.add(USER_DEFAULT_ADMIN, defaultAdminUser)
             grantGroup(USER_DEFAULT_ADMIN, GROUP_ADMIN)
             grantGroup(USER_DEFAULT_ADMIN, GROUP_USER)
 
+            val defaultAgentUser = UserRecord(getProperty("security","default.agent.user.name"), Date(), Date(), null, crypto.passwordHash(getProperty("security","default.agent.user.name"), getProperty("security","default.agent.user.password")))
+            keyValueDao.add(getProperty("security","default.agent.user.name"), defaultAgentUser)
+            //TODO create agent group
+            grantGroup(getProperty("security","default.agent.user.name"), GROUP_USER)
 
             contextService.clearThreadContext()
         }

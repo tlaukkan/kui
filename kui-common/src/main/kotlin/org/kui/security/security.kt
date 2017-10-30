@@ -2,6 +2,7 @@ package org.kui.security
 
 import org.kui.api.model.Tagger
 import org.kui.security.model.*
+import org.kui.util.getProperty
 import views.alerts.activity.ActivityAlert
 
 val SECURITY_PROVIDER = "SunJCE"
@@ -20,7 +21,7 @@ val GROUP_USER = "user"
 val GROUP_ANONYMOUS = "anonymous"
 
 val USER_SYSTEM_USER = "system.user"
-val USER_DEFAULT_ADMIN = "default.admin"
+val USER_DEFAULT_ADMIN = getProperty("security","default.admin.user.name")
 
 val PRIVILEGE_GET = "get"
 val PRIVILEGE_ADD = "add"
