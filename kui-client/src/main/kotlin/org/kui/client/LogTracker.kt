@@ -15,9 +15,9 @@ import kotlin.streams.toList
 /**
  * Created by tlaukkan on 6/29/2017.
  */
-class Client {
+class LogTracker {
 
-    private val log = LoggerFactory.getLogger(Client::class.java.name)
+    private val log = LoggerFactory.getLogger(LogTracker::class.java.name)
 
     private val mapper = ObjectMapper()
     private val parser = LineParser()

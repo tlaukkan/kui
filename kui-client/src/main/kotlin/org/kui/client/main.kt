@@ -25,7 +25,7 @@ fun main(args : Array<String>) {
         disableSslVerification()
     }
 
-    val client = Client()
+    val client = LogTracker()
 
     Runtime.getRuntime().addShutdownHook(Thread({
         println("Shutdown at " + Date())
