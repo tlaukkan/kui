@@ -1,4 +1,4 @@
-package org.kui.client
+package org.kui.client.tracker
 
 import org.kui.model.LogLine
 import org.pojava.datetime.DateTime

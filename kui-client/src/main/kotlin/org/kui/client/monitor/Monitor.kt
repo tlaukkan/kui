@@ -1,4 +1,4 @@
-package org.kui.client
+package org.kui.client.monitor
 
 import org.slf4j.LoggerFactory
 import java.lang.management.ManagementFactory

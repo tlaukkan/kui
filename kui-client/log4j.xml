@@ -20,7 +20,7 @@
         </layout>
     </appender>
 
-    <appender name="kui" class="org.kui.log4j.KuiAppender">
+    <appender name="kui" class="org.kui.client.tracker.log4j.KuiAppender">
     </appender>
 
     <logger additivity="true" name="org.kui">

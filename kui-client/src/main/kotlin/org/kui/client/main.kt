@@ -1,6 +1,8 @@
 package org.kui.client
 
 import org.apache.log4j.xml.DOMConfigurator
+import org.kui.client.tracker.Tracker
+import org.kui.client.monitor.Monitor
 import org.slf4j.LoggerFactory
 import org.kui.util.getProperty
 import org.kui.util.setProperty
@@ -25,7 +27,7 @@ fun main(args : Array<String>) {
         disableSslVerification()
     }
 
-    val client = LogTracker()
+    val tracker = Tracker()
 
     Runtime.getRuntime().addShutdownHook(Thread({
         println("Shutdown at " + Date())
@@ -33,14 +35,14 @@ fun main(args : Array<String>) {
 
     while (true) {
         try {
-            if (!client.isConnected()) {
+            if (!tracker.isConnected()) {
                 if (!getProperty("client","simulate").equals("true")) {
-                    client.connect()
+                    tracker.connect()
                 }
             }
-            client.track()
+            tracker.track()
         } catch (e : Exception) {
-            client.disconnect()
+            tracker.disconnect()
             log.error("Error in tracking logs.", e)
             Thread.sleep(10000)
         }

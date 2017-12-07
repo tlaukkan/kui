@@ -1,9 +1,9 @@
-package org.kui.log4j
+package org.kui.client.tracker.log4j
 
 import org.kui.client.disableSslVerification
 import org.apache.log4j.AppenderSkeleton
 import org.apache.log4j.spi.LoggingEvent
-import org.kui.client.LogStorageClient
+import org.kui.client.tracker.LogStorageClient
 import org.kui.model.LogLine
 import org.kui.util.getProperty
 import org.kui.util.setProperty

@@ -1,7 +1,8 @@
-package org.kui.client
+package org.kui.client.tracker
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.lang.StringUtils
+import org.kui.client.ClientException
 import org.slf4j.LoggerFactory
 import org.kui.model.LogLine
 import org.kui.server.api.users.LogBatch

@@ -1,8 +1,7 @@
-package org.kui.client
+package org.kui.client.tracker
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.kui.model.LogLine
-import org.kui.model.LogTrack
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.WildcardFileFilter
 import org.slf4j.LoggerFactory
@@ -13,11 +12,11 @@ import kotlin.streams.toList
 
 
 /**
- * Created by tlaukkan on 6/29/2017.
+ * Tracks changes in log files and sends them to log storage.
  */
-class LogTracker {
+class Tracker {
 
-    private val log = LoggerFactory.getLogger(LogTracker::class.java.name)
+    private val log = LoggerFactory.getLogger(Tracker::class.java.name)
 
     private val mapper = ObjectMapper()
     private val parser = LineParser()

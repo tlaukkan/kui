@@ -10,7 +10,7 @@ import io.undertow.servlet.Servlets
 import io.undertow.websockets.jsr.WebSocketDeploymentInfo
 import org.apache.log4j.xml.DOMConfigurator
 import org.slf4j.LoggerFactory
-import org.kui.client.Monitor
+import org.kui.client.monitor.Monitor
 import org.kui.security.*
 import org.kui.security.model.SecurityContext
 import org.kui.server.api.logs.GetLogRows
