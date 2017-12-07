@@ -14,7 +14,7 @@ buildscript {
 
 apply plugin: 'kotlin2js'
 
-compileKotlin2Js.kotlinOptions.outputFile = "${project.rootDir}/white-ice-web-server/ui/build/classes/main/ui.js"
+compileKotlin2Js.kotlinOptions.outputFile = "${project.rootDir}/kui-web/ui/build/classes/main/ui.js"
 compileKotlin2Js.kotlinOptions.sourceMap = true
 
 task copySources(type: Copy) {
@@ -49,7 +49,7 @@ compileKotlin2Js.doLast {
             includeEmptyDirs = false
 
             from zipTree(file.absolutePath)
-            into "${project.rootDir}/white-ice-web-server/ui/build/classes/main/lib"
+            into "${project.rootDir}/kui-web/ui/build/classes/main/lib"
             include { fileTreeElement ->
                 def path = fileTreeElement.path
                 path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))

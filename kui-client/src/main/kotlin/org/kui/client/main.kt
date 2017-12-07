@@ -3,7 +3,6 @@ package org.kui.client
 import org.apache.log4j.xml.DOMConfigurator
 import org.slf4j.LoggerFactory
 import org.kui.util.getProperty
-import org.kui.util.getZoneOffsetMillis
 import org.kui.util.setProperty
 import java.security.KeyManagementException
 import java.security.NoSuchAlgorithmException
@@ -14,8 +13,6 @@ private val log = LoggerFactory.getLogger("org.kui.client.main")
 
 fun main(args : Array<String>) {
     DOMConfigurator.configure("log4j.xml")
-
-    log.info("Time Zone offset: " + getZoneOffsetMillis())
 
     val monitor = Monitor().start()
 

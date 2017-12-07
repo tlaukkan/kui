@@ -22,7 +22,6 @@ import org.kui.server.work.CoordinationWorker
 import org.kui.server.workers.ActivityAlertWorker
 import org.kui.storage.cassandra.CassandraKeyValueTable
 import org.kui.util.getProperty
-import org.kui.util.getZoneOffsetMillis
 import org.kui.util.setProperty
 import org.xnio.OptionMap
 import org.xnio.Xnio
@@ -43,8 +42,6 @@ fun main(args : Array<String>) {
     val server = configureServer()
 
     log.info("Server ${InetAddress.getLocalHost().getHostName()} started.")
-
-    log.info("Time Zone offset: " + getZoneOffsetMillis())
 
     contextService.setThreadContext(SecurityContext(USER_SYSTEM_USER, listOf(GROUP_SYSTEM, GROUP_ADMIN), ByteArray(0), Date()))
 
