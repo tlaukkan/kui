@@ -45,6 +45,7 @@ external fun encodeURI(message: String): String
 external fun decodeURIComponent(message: String): String
 
 external fun showModal(id: String): Unit
+
 external fun hideModal(id: String): Unit
 
 fun dateToUiString(date: Date): String {
@@ -58,21 +59,6 @@ fun dateToUiString(date: Date): String {
     val milliseconds = (dynamicDate.getMilliseconds()).toString().padStart(3, '0')
     return "$year-$month-$day $hours:$minutes:$seconds.$milliseconds"
 }
-
-/*fun localToUtc(date: Date): Date {
-    val dynamicDate: dynamic = date
-    var offset = dynamicDate.getTimezoneOffset().toString().toLong() * 60L * 1000L
-    var milliseconds = dynamicDate.getTime().toString().toLong()
-    return getDateFromMilliseconds(milliseconds + offset)
-}*/
-
-fun utcToLocal(date: Date): Date {
-    val dynamicDate: dynamic = date
-    var offset = (dynamicDate.getTimezoneOffset() * 60L * 1000L) as Long
-    var milliseconds = (dynamicDate.getTime() * 1L) as Long
-    return getDateFromMilliseconds(milliseconds - offset)
-}
-
 
 fun dateToShortUiString(date: Date): String {
     val dynamicDate: dynamic = date
