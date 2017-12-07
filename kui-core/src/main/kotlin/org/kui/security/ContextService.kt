@@ -7,7 +7,7 @@ import java.util.*
 /**
  * SessionContext service.
  */
-class ContextService {
+object ContextService {
     private val log = LoggerFactory.getLogger(ContextService::class.java.name)
 
     /**
@@ -25,8 +25,8 @@ class ContextService {
      * @return the security token
      */
     @Synchronized fun createContext(user: String, groups: List<String>): String {
-        val securityToken = crypto.createSecurityToken()
-        val securityTokenHash = crypto.securityTokenHash(securityToken)
+        val securityToken = Crypto.createSecurityToken()
+        val securityTokenHash = Crypto.securityTokenHash(securityToken)
         val securityTokenHashString = Base64.getEncoder().encodeToString(securityTokenHash)
         val securityContext = SecurityContext(user, groups, securityTokenHash, Date())
         contexts.put(securityTokenHashString, securityContext)

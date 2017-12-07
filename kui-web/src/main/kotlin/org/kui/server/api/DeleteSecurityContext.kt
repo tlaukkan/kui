@@ -3,8 +3,8 @@ package org.kui.server.api.users.login
 import org.slf4j.LoggerFactory
 import org.kui.security.GROUP_ANONYMOUS
 import org.kui.security.GROUP_USER
-import org.kui.security.contextService
-import org.kui.security.crypto
+import org.kui.security.ContextService
+import org.kui.security.Crypto
 import org.kui.server.api.getApiObjectMapper
 import org.kui.server.rest.StreamRestProcessor
 import java.io.InputStream
@@ -16,11 +16,11 @@ class DeleteSecurityContext : StreamRestProcessor("/api/security/context", "DELE
 
     override fun process(ids: Map<String, String>, parameters: Map<String, String>, inputStream: InputStream, outputStream: OutputStream) {
         val securityToken = getApiObjectMapper().readValue(inputStream, String::class.java)
-        val securityTokenHash = crypto.securityTokenHash(securityToken)
+        val securityTokenHash = Crypto.securityTokenHash(securityToken)
         val securityTokenHashString = Base64.getEncoder().encodeToString(securityTokenHash)
 
-        contextService.destroyContext(securityTokenHashString)
+        ContextService.destroyContext(securityTokenHashString)
 
-        log.info("User sign out: ${contextService.getThreadContext().user}")
+        log.info("User sign out: ${ContextService.getThreadContext().user}")
     }
 }

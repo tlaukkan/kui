@@ -10,7 +10,7 @@ import javax.crypto.spec.SecretKeySpec
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
-class Crypto {
+object Crypto {
     val secureRandom = SecureRandom.getInstanceStrong()!!
 
     val securityTokenSalt: ByteArray

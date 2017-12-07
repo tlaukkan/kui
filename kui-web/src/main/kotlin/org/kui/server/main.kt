@@ -43,7 +43,7 @@ fun main(args : Array<String>) {
 
     log.info("Server ${InetAddress.getLocalHost().getHostName()} started.")
 
-    contextService.setThreadContext(SecurityContext(USER_SYSTEM_USER, listOf(GROUP_SYSTEM, GROUP_ADMIN), ByteArray(0), Date()))
+    ContextService.setThreadContext(SecurityContext(USER_SYSTEM_USER, listOf(GROUP_SYSTEM, GROUP_ADMIN), ByteArray(0), Date()))
 
     val activityAlertWorker = ActivityAlertWorker().start()
 
@@ -61,7 +61,7 @@ fun configureServer(): Undertow {
         setProperty("work", "host", System.getenv("HOSTNAME"))
     }
 
-    userManagement.configure()
+    UserManagement.configure()
 
     val sslContext = createSSLContext(
             loadKeyStore(getProperty("web", "web.keystore.path"), getProperty("web", "web.keystore.password")),

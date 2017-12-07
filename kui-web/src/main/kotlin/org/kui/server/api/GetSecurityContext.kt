@@ -11,11 +11,11 @@ import java.io.OutputStream
 
 class GetSecurityContext : StreamRestProcessor("/api/security/context", "GET", listOf(GROUP_USER, GROUP_ANONYMOUS)) {
     override fun process(ids: Map<String, String>, parameters: Map<String, String>, inputStream: InputStream, outputStream: OutputStream) {
-        if (contextService.getThreadContext() == null) {
+        if (ContextService.getThreadContext() == null) {
             throw SecurityException("Attempt to access current user without session.")
         }
-        val userRecord = keyValueDao.get(contextService.getThreadContext().user, UserRecord::class.java)!!
-        val user = User(userRecord.key, userRecord.created, userRecord.modified, userRecord.email, null, userManagement.getUserGroups(userRecord.key!!).toTypedArray())
+        val userRecord = keyValueDao.get(ContextService.getThreadContext().user, UserRecord::class.java)!!
+        val user = User(userRecord.key, userRecord.created, userRecord.modified, userRecord.email, null, UserManagement.getUserGroups(userRecord.key!!).toTypedArray())
         getApiObjectMapper().writeValue(outputStream, user)
     }
 }

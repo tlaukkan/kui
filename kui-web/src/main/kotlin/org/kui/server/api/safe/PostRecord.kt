@@ -2,6 +2,7 @@ package org.kui.server.api.safe
 
 import org.kui.server.api.getApiObjectMapper
 import org.kui.security.*
+import org.kui.server.api.getRecordClass
 import org.kui.server.rest.StreamRestProcessor
 import java.io.InputStream
 import java.io.OutputStream
@@ -11,6 +12,6 @@ class PostRecord : StreamRestProcessor("/api/safe/<type>", "POST", listOf(GROUP_
         val type = ids["type"]!!
         val clazz = getRecordClass(type)
         val record = getApiObjectMapper().readValue(inputStream, clazz)
-        safe.add(record)
+        Safe.add(record)
     }
 }

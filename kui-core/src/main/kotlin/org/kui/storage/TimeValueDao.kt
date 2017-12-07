@@ -3,7 +3,7 @@ package org.kui.storage
 import org.kui.model.TimeValue
 import org.kui.model.TimeValueResult
 import org.kui.model.TimeValueRow
-import org.kui.security.crypto
+import org.kui.security.Crypto
 import org.kui.storage.cassandra.CassandraTimeValueTable
 import org.kui.storage.dynamodb.DynamoDbTimeValueTable
 import org.kui.storage.jpa.JpaTimeValueTable
@@ -27,7 +27,7 @@ class TimeValueDao(table: String) {
             val meta = "$container:$key:${timeValue.time.time}"
             val nonce = meta.hashCode().toString().toByteArray()
             val aad = meta.toByteArray()
-            val cipherText = crypto.encrypt(nonce, aad, timeValue.value)
+            val cipherText = Crypto.encrypt(nonce, aad, timeValue.value)
             encryptedValues.add(TimeValue(timeValue.time, cipherText))
         }
         timeValueTable.insert(container, key, encryptedValues)
@@ -40,7 +40,7 @@ class TimeValueDao(table: String) {
             val meta = ("${row.container}:${row.key}:${row.time.time}")
             val nonce = meta.hashCode().toString().toByteArray()
             val aad = meta.toByteArray()
-            val plainText = crypto.decrypt(nonce, aad, row.value)
+            val plainText = Crypto.decrypt(nonce, aad, row.value)
             values.add(TimeValueRow(row.id, row.container, row.key, row.time, row.received, plainText))
         }
         return TimeValueResult(result.endTime, result.nextBeginId, values)

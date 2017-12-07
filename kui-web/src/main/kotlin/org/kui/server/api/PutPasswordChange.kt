@@ -10,6 +10,6 @@ import java.io.OutputStream
 class PutPasswordChange : StreamRestProcessor("/api/user/password", "PUT", listOf(GROUP_USER)) {
     override fun process(ids: Map<String, String>, parameters: Map<String, String>, inputStream: InputStream, outputStream: OutputStream) {
         val passwordChange = getApiObjectMapper().readValue(inputStream, PasswordChange::class.java)
-        userManagement.changeOwnPassword(passwordChange.oldPassword!!, passwordChange.newPassword!!)
+        UserManagement.changeOwnPassword(passwordChange.oldPassword!!, passwordChange.newPassword!!)
     }
 }

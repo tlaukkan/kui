@@ -2,8 +2,6 @@ package org.kui.server.api.logs
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
-import org.kui.log.environmentLogsDao
-import org.kui.log.hostLogsDao
 import org.kui.model.LogResult
 import org.kui.model.LogRow
 import org.kui.model.TimeValueResult

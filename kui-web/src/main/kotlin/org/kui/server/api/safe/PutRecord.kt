@@ -3,6 +3,7 @@ package org.kui.server.api.safe
 import org.kui.server.api.getApiObjectMapper
 import org.kui.security.*
 import org.kui.security.model.Record
+import org.kui.server.api.getRecordClass
 import org.kui.server.rest.StreamRestProcessor
 import java.io.InputStream
 import java.io.OutputStream
@@ -20,15 +21,15 @@ class PutRecord : StreamRestProcessor("/api/safe/<type>/<key>", "PUT", listOf(GR
             throw SecurityException("Updated record had key mismatch with URL and value object.")
         }
 
-        if (!safe.has(key, clazz.name)) {
+        if (!Safe.has(key, clazz.name)) {
             throw SecurityException("No such $key:${clazz.name} record.")
         }
 
-        val existingRecord = safe.get(key, clazz)!!
+        val existingRecord = Safe.get(key, clazz)!!
 
         copyRecordProperties(record, existingRecord)
 
-        safe.update(existingRecord)
+        Safe.update(existingRecord)
     }
 
     fun copyRecordProperties(source: Record, target: Record) {

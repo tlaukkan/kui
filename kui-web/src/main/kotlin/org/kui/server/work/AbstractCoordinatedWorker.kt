@@ -2,7 +2,7 @@ package org.kui.server.work
 
 import org.slf4j.LoggerFactory
 import org.kui.api.model.WorkUnit
-import org.kui.security.safe
+import org.kui.security.Safe
 import java.util.*
 
 abstract class AbstractCoordinatedWorker(workInternalMillis: Long) : AbstractWorker(workInternalMillis) {
@@ -19,7 +19,7 @@ abstract class AbstractCoordinatedWorker(workInternalMillis: Long) : AbstractWor
 
     override fun checkForAssignedWorkUnits() {
 
-        val assignedUnits = safe.getWithKeyPrefix("$host.${this::class.java.simpleName.toString().toLowerCase()}", WorkUnit::class.java)
+        val assignedUnits = Safe.getWithKeyPrefix("$host.${this::class.java.simpleName.toString().toLowerCase()}", WorkUnit::class.java)
         for (unit in assignedUnits) {
             if (unit.started == null) {
                 unit.started = Date()
@@ -27,14 +27,14 @@ abstract class AbstractCoordinatedWorker(workInternalMillis: Long) : AbstractWor
             }
 
             try {
-                safe.update(unit) // Update the timestamp
+                Safe.update(unit) // Update the timestamp
             } finally {
                 if (work(unit)) {
-                    safe.remove(unit) // Work completed
+                    Safe.remove(unit) // Work completed
                     //log.info("${unit.host!!} completed working on unit ${URLDecoder.decode(unit.dataKey, "UTF-8")} of ${unit.workerClass}.")
                 } else {
                     unit.paused = Date()
-                    safe.update(unit) // Update the timestamp
+                    Safe.update(unit) // Update the timestamp
                     //log.info("${unit.host!!} paused working on unit ${URLDecoder.decode(unit.dataKey, "UTF-8")} of ${unit.workerClass}.")
                 }
             }

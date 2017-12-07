@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory
 import org.kui.security.GROUP_ADMIN
 import org.kui.security.GROUP_SYSTEM
 import org.kui.security.USER_SYSTEM_USER
-import org.kui.security.contextService
+import org.kui.security.ContextService
 import org.kui.security.model.SecurityContext
 import org.kui.util.getProperty
 import java.util.*
@@ -19,7 +19,7 @@ abstract class AbstractWorker(val workIntervalMillis: Long = 60000) {
     open fun start() : AbstractWorker {
         thread(true, true, null, this::class.java.simpleName, -1, {
             try {
-                contextService.setThreadContext(SecurityContext(USER_SYSTEM_USER, listOf(GROUP_SYSTEM, GROUP_ADMIN), ByteArray(0), Date()))
+                ContextService.setThreadContext(SecurityContext(USER_SYSTEM_USER, listOf(GROUP_SYSTEM, GROUP_ADMIN), ByteArray(0), Date()))
                 log.info("${this::class.java.simpleName} started.")
                 while (true) {
                     try {

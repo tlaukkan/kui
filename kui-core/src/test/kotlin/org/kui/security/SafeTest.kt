@@ -14,7 +14,7 @@ class SafeTest {
     fun testSafe() {
         DOMConfigurator.configure("log4j.xml")
 
-        contextService.setThreadContext(SecurityContext(USER_DEFAULT_ADMIN, listOf(GROUP_USER, GROUP_ADMIN), ByteArray(0), Date()))
+        ContextService.setThreadContext(SecurityContext(USER_DEFAULT_ADMIN, listOf(GROUP_USER, GROUP_ADMIN), ByteArray(0), Date()))
 
         val testKey = "test.key"
         val testValue = "test.value"
@@ -22,26 +22,26 @@ class SafeTest {
 
         val testRecord = TestRecord(testKey, testValue)
 
-        for (key in safe.getKeys(TestRecord::class.java)) {
-            safe.remove(key, TestRecord::class.java)
+        for (key in Safe.getKeys(TestRecord::class.java)) {
+            Safe.remove(key, TestRecord::class.java)
         }
 
-        Assert.assertNull(safe.get(testKey, TestRecord::class.java))
-        Assert.assertFalse(safe.has(testKey, TestRecord::class.java))
+        Assert.assertNull(Safe.get(testKey, TestRecord::class.java))
+        Assert.assertFalse(Safe.has(testKey, TestRecord::class.java))
 
-        safe.add(testRecord)
-        Assert.assertNotNull(safe.get(testKey, TestRecord::class.java))
-        Assert.assertTrue(safe.has(testKey, TestRecord::class.java))
-        Assert.assertEquals(testValue, safe.get(testKey, TestRecord::class.java)!!.value)
+        Safe.add(testRecord)
+        Assert.assertNotNull(Safe.get(testKey, TestRecord::class.java))
+        Assert.assertTrue(Safe.has(testKey, TestRecord::class.java))
+        Assert.assertEquals(testValue, Safe.get(testKey, TestRecord::class.java)!!.value)
 
-        Assert.assertEquals(1, safe.getKeys(TestRecord::class.java).size)
+        Assert.assertEquals(1, Safe.getKeys(TestRecord::class.java).size)
 
         testRecord.value = testValue2
-        safe.update(testRecord)
-        Assert.assertEquals(testValue2, safe.get(testKey, TestRecord::class.java)!!.value)
+        Safe.update(testRecord)
+        Assert.assertEquals(testValue2, Safe.get(testKey, TestRecord::class.java)!!.value)
 
-        safe.remove(testRecord)
-        Assert.assertNull(safe.get(testKey, TestRecord::class.java))
+        Safe.remove(testRecord)
+        Assert.assertNull(Safe.get(testKey, TestRecord::class.java))
     }
 
 

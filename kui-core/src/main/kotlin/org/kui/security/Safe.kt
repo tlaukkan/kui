@@ -4,14 +4,14 @@ import org.kui.security.model.*
 import org.kui.storage.keyValueDao
 import java.util.*
 
-class Safe {
+object Safe {
 
     fun add(record: Record) {
         if (record.key!!.contains(':')) {
             throw SecurityException("Record key ${record.key} may not contain ':' character as it is reserved as key part delimiter.")
         }
 
-        userManagement.checkPrivilege(record, PRIVILEGE_ADD)
+        UserManagement.checkPrivilege(record, PRIVILEGE_ADD)
 
 
         record.created = Date()
@@ -29,7 +29,7 @@ class Safe {
     }
 
     fun update(record: Record) {
-        userManagement.checkPrivilege(record, PRIVILEGE_UPDATE)
+        UserManagement.checkPrivilege(record, PRIVILEGE_UPDATE)
 
         record.modified = Date()
 
@@ -55,7 +55,7 @@ class Safe {
     }
 
     fun remove(key: String, type: String) : Unit {
-        userManagement.checkPrivilege(key, type, PRIVILEGE_REMOVE)
+        UserManagement.checkPrivilege(key, type, PRIVILEGE_REMOVE)
         if (has(key, type)) {
             keyValueDao.remove(key, type)
         }
@@ -73,7 +73,7 @@ class Safe {
     fun <T : Record> get(key: String, clazz: Class<T>): T? {
         val type = clazz.name
         if (keyValueDao.has(key, clazz)) {
-            userManagement.checkPrivilege(key, type, PRIVILEGE_GET)
+            UserManagement.checkPrivilege(key, type, PRIVILEGE_GET)
         }
         return keyValueDao.get(key, clazz)
     }
@@ -86,7 +86,7 @@ class Safe {
     fun <T : Record> getAll(clazz: Class<T>): List<T> {
         val records = keyValueDao.get(clazz)
         for (record in records) {
-            userManagement.checkPrivilege(record.key!!, clazz.name, PRIVILEGE_GET)
+            UserManagement.checkPrivilege(record.key!!, clazz.name, PRIVILEGE_GET)
         }
         return records
     }
@@ -94,7 +94,7 @@ class Safe {
     fun <T : Record> getWithKeyPrefix(keyPrefix: String, clazz: Class<T>): List<T> {
         val records = keyValueDao.getWithKeyPrefix(keyPrefix, clazz)
         for (record in records) {
-            userManagement.checkPrivilege(record.key!!, clazz.name, PRIVILEGE_GET)
+            UserManagement.checkPrivilege(record.key!!, clazz.name, PRIVILEGE_GET)
         }
         return records
     }

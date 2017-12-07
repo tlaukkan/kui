@@ -1,7 +1,7 @@
 package org.kui.storage
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.kui.security.crypto
+import org.kui.security.Crypto
 import org.kui.storage.cassandra.CassandraKeyValueTable
 import org.kui.storage.dynamodb.DynamoDbKeyValueTable
 import org.kui.storage.jpa.JpaKeyValueTable
@@ -25,7 +25,7 @@ class KeyValueDao {
         val nonce = keyAndType.hashCode().toString().toByteArray()
         val aad = keyAndType.toByteArray()
         val plainText = mapper.writeValueAsBytes(value)
-        val cipherText = crypto.encrypt(nonce, aad, plainText)
+        val cipherText = Crypto.encrypt(nonce, aad, plainText)
         keyValueTable.add(key, type, cipherText)
     }
 
@@ -36,7 +36,7 @@ class KeyValueDao {
         val nonce = keyAndType.hashCode().toString().toByteArray()
         val aad = keyAndType.toByteArray()
         val plainText = mapper.writeValueAsBytes(value)
-        val cipherText = crypto.encrypt(nonce, aad, plainText)
+        val cipherText = Crypto.encrypt(nonce, aad, plainText)
         keyValueTable.update(key, type, cipherText)
     }
 
@@ -61,7 +61,7 @@ class KeyValueDao {
         val nonce = keyAndType.hashCode().toString().toByteArray()
         val aad = keyAndType.toByteArray()
         val cipherText = keyValueTable.get(key, type) ?: return null
-        val plainText = crypto.decrypt(nonce, aad, cipherText)
+        val plainText = Crypto.decrypt(nonce, aad, cipherText)
         return plainText
     }
 
@@ -72,7 +72,7 @@ class KeyValueDao {
         val nonce = keyAndType.hashCode().toString().toByteArray()
         val aad = keyAndType.toByteArray()
         val cipherText = keyValueTable.get(key, type) ?: return null
-        val plainText = crypto.decrypt(nonce, aad, cipherText)
+        val plainText = Crypto.decrypt(nonce, aad, cipherText)
         return mapper.readValue(plainText, clazz)
     }
 
@@ -86,7 +86,7 @@ class KeyValueDao {
             val keyAndType = (key + ":" + type)
             val nonce = keyAndType.hashCode().toString().toByteArray()
             val aad = keyAndType.toByteArray()
-            val plainText = crypto.decrypt(nonce, aad, cipherText)
+            val plainText = Crypto.decrypt(nonce, aad, cipherText)
 
             values.add(plainText)
         }
@@ -105,7 +105,7 @@ class KeyValueDao {
             val keyAndType = (key + ":" + type)
             val nonce = keyAndType.hashCode().toString().toByteArray()
             val aad = keyAndType.toByteArray()
-            val plainText = crypto.decrypt(nonce, aad, cipherText)
+            val plainText = Crypto.decrypt(nonce, aad, cipherText)
 
             values.add(mapper.readValue(plainText, clazz))
         }
@@ -124,7 +124,7 @@ class KeyValueDao {
             val keyAndType = (key + ":" + type)
             val nonce = keyAndType.hashCode().toString().toByteArray()
             val aad = keyAndType.toByteArray()
-            val plainText = crypto.decrypt(nonce, aad, cipherText)
+            val plainText = Crypto.decrypt(nonce, aad, cipherText)
 
             values.add(mapper.readValue(plainText, clazz))
         }

@@ -6,7 +6,7 @@ import org.kui.storage.keyValueDao
 import org.kui.util.getProperty
 import java.util.*
 
-class UserManagement {
+object UserManagement {
 
     private val log = LoggerFactory.getLogger("org.kui.security")
 
@@ -26,23 +26,23 @@ class UserManagement {
             keyValueDao.add(userGroup.key!!, userGroup)
 
 
-            contextService.setThreadContext(SecurityContext(systemUser.key!!, listOf(systemGroup.key!!, adminGroup.key!!), ByteArray(0), Date()))
+            ContextService.setThreadContext(SecurityContext(systemUser.key!!, listOf(systemGroup.key!!, adminGroup.key!!), ByteArray(0), Date()))
 
             grantGroup(systemUser.key!!, GROUP_SYSTEM)
             grantGroup(systemUser.key!!, GROUP_ADMIN)
             grantGroup(systemUser.key!!, GROUP_USER)
 
-            val defaultAdminUser = UserRecord(USER_DEFAULT_ADMIN, Date(), Date(), null, crypto.passwordHash(USER_DEFAULT_ADMIN, getProperty("security","default.admin.user.password")))
+            val defaultAdminUser = UserRecord(USER_DEFAULT_ADMIN, Date(), Date(), null, Crypto.passwordHash(USER_DEFAULT_ADMIN, getProperty("security","default.admin.user.password")))
             keyValueDao.add(USER_DEFAULT_ADMIN, defaultAdminUser)
             grantGroup(USER_DEFAULT_ADMIN, GROUP_ADMIN)
             grantGroup(USER_DEFAULT_ADMIN, GROUP_USER)
 
-            val defaultClientUser = UserRecord(getProperty("security","default.client.user.name"), Date(), Date(), null, crypto.passwordHash(getProperty("security","default.client.user.name"), getProperty("security","default.client.user.password")))
+            val defaultClientUser = UserRecord(getProperty("security","default.client.user.name"), Date(), Date(), null, Crypto.passwordHash(getProperty("security","default.client.user.name"), getProperty("security","default.client.user.password")))
             keyValueDao.add(getProperty("security","default.client.user.name"), defaultClientUser)
             //TODO create client group
             grantGroup(getProperty("security","default.client.user.name"), GROUP_USER)
 
-            contextService.clearThreadContext()
+            ContextService.clearThreadContext()
         }
 
     }
@@ -58,7 +58,7 @@ class UserManagement {
         keyValueDao.add(groupUserMember.key!!, groupUserMember)
         val userGroupMember = GroupMemberRecord("u:$userKey:$groupKey", Date(), Date(), groupKey, userKey)
         keyValueDao.add(userGroupMember.key!!, userGroupMember)
-        log.info("AUDIT '${contextService.getThreadContext().user}' granted '$userKey' membership to '$groupKey'.")
+        log.info("AUDIT '${ContextService.getThreadContext().user}' granted '$userKey' membership to '$groupKey'.")
     }
 
     fun revokeGroup(userKey: String, groupKey: String) {
@@ -67,11 +67,11 @@ class UserManagement {
         keyValueDao.remove("g:$groupKey:$userKey", GroupMemberRecord::class.java.name)
         keyValueDao.remove("u:$userKey:$groupKey", GroupMemberRecord::class.java.name)
 
-        log.info("AUDIT '${contextService.getThreadContext().user}' revoked '$userKey' membership from '$groupKey'.")
+        log.info("AUDIT '${ContextService.getThreadContext().user}' revoked '$userKey' membership from '$groupKey'.")
     }
 
     fun checkGroup(groupKey: String){
-        val context = contextService.getThreadContext()
+        val context = ContextService.getThreadContext()
         if (context.groups.contains(groupKey)) {
             return
         }
@@ -87,6 +87,26 @@ class UserManagement {
 
     fun checkPrivilege(recordKey: String, recordType: String, operation: String) {
         checkGroup(getRequiredGroup(recordType, operation))
+    }
+
+    //TODO Create dynamic mapping
+    fun getRequiredGroup(type: String, operation: String) : String {
+        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_UPDATE)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_REMOVE)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(UserRecord::class.java.simpleName)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(GroupRecord::class.java.simpleName)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(GroupMemberRecord::class.java.simpleName)) {
+            return GROUP_ADMIN
+        }
+        return GROUP_USER
     }
 
     fun getUserGroups(user: String) : List<String> {
@@ -114,39 +134,39 @@ class UserManagement {
     }
 
     fun getUsers() : List<UserRecord> {
-        return safe.getAll(UserRecord::class.java)
+        return Safe.getAll(UserRecord::class.java)
     }
 
     fun getUser(key: String) : UserRecord {
-        return safe.get(key, UserRecord::class.java)!!
+        return Safe.get(key, UserRecord::class.java)!!
     }
 
     fun addUser(key: String, email: String, password: String) : Unit {
         if (password.length < 12) {
             throw SecurityException("Passwords under length of 12 are prohibited.")
         }
-        safe.add(UserRecord(key, Date(), Date(), email, crypto.passwordHash(key, password)))
+        Safe.add(UserRecord(key, Date(), Date(), email, Crypto.passwordHash(key, password)))
         grantGroup(key, GROUP_USER)
-        log.info("AUDIT '${contextService.getThreadContext().user}' added user '$key'.")
+        log.info("AUDIT '${ContextService.getThreadContext().user}' added user '$key'.")
     }
 
     fun updateUser(key: String, email: String, password: String?) : Unit {
-        val userRecord = safe.get(key, UserRecord::class.java)!!
+        val userRecord = Safe.get(key, UserRecord::class.java)!!
         userRecord.email = email
         if (password != null) {
             if (password.length < 12) {
                 throw SecurityException("Passwords under length of 12 are prohibited.")
             }
-            userRecord.passwordHash = crypto.passwordHash(key, password!!)
+            userRecord.passwordHash = Crypto.passwordHash(key, password!!)
         }
-        safe.update(userRecord)
-        log.info("AUDIT '${contextService.getThreadContext().user}' updated user '$key'.")
+        Safe.update(userRecord)
+        log.info("AUDIT '${ContextService.getThreadContext().user}' updated user '$key'.")
     }
 
 
     fun removeUser(key: String) : Unit {
-        safe.remove(key, UserRecord::class.java)
-        log.info("AUDIT '${contextService.getThreadContext().user}' removed user '$key'.")
+        Safe.remove(key, UserRecord::class.java)
+        log.info("AUDIT '${ContextService.getThreadContext().user}' removed user '$key'.")
     }
 
     fun getGroup(group: String) : GroupRecord {
@@ -158,16 +178,16 @@ class UserManagement {
     private fun createRecordPrivilegeKey(recordKey: String, recordType: String?, groupKey: String, operation: String) = "r:$recordKey:$recordType:$groupKey:$operation"
 
     fun changeOwnPassword(oldPassword: String, newPassword: String) : Unit {
-        val key = contextService.getThreadContext().user
+        val key = ContextService.getThreadContext().user
         val userRecord = keyValueDao.get(key, UserRecord::class.java)!!
 
-        val oldPasswordHash = crypto.passwordHash(key, oldPassword!!)
+        val oldPasswordHash = Crypto.passwordHash(key, oldPassword!!)
 
         if (!(oldPasswordHash contentEquals userRecord.passwordHash!!)) {
             throw SecurityException("Change password access denied. Old password incorrect for user: $key")
         }
 
-        userRecord.passwordHash = crypto.passwordHash(key, newPassword!!)
+        userRecord.passwordHash = Crypto.passwordHash(key, newPassword!!)
 
         keyValueDao.update(key, userRecord)
 
@@ -176,7 +196,7 @@ class UserManagement {
 
     fun validatePassword(userKey: String, password: String) : Boolean {
         val userRecord = keyValueDao.get(userKey, UserRecord::class.java) ?: return false
-        val passwordHash = crypto.passwordHash(userKey, password)
+        val passwordHash = Crypto.passwordHash(userKey, password)
         return passwordHash contentEquals userRecord.passwordHash!!
     }
 

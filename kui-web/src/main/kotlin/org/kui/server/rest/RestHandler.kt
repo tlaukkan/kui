@@ -55,7 +55,7 @@ class RestHandler : HttpHandler {
                         return
                     }
 
-                    val passwordHash = crypto.passwordHash(username, password!!)
+                    val passwordHash = Crypto.passwordHash(username, password!!)
                     if (!(passwordHash contentEquals userRecord.passwordHash!!)) {
                         log.warn("Basic authentication failed due to password mismatch: $username")
                         userRecord.passwordLoginFailed = Date()
@@ -64,10 +64,10 @@ class RestHandler : HttpHandler {
                         return
                     }
 
-                    val securityToken = contextService.createContext(userRecord.key!!, userManagement.getUserGroups(userRecord.key!!))
-                    val securityTokenHash = crypto.securityTokenHash(securityToken)
+                    val securityToken = ContextService.createContext(userRecord.key!!, UserManagement.getUserGroups(userRecord.key!!))
+                    val securityTokenHash = Crypto.securityTokenHash(securityToken)
                     val securityTokenHashString = Base64.getEncoder().encodeToString(securityTokenHash)
-                    contextService.setThreadContext(contextService.getContext(securityTokenHashString)!!)
+                    ContextService.setThreadContext(ContextService.getContext(securityTokenHashString)!!)
                     exchange.responseHeaders.put(HttpString("Security-Token"), securityToken)
 
                     log.info("User sign in: $username")
@@ -82,9 +82,9 @@ class RestHandler : HttpHandler {
                     }
 
                     val securityToken = credentialMap["token"]!!
-                    val securityTokenHash = crypto.securityTokenHash(securityToken)
+                    val securityTokenHash = Crypto.securityTokenHash(securityToken)
                     val securityTokenHashString = Base64.getEncoder().encodeToString(securityTokenHash)
-                    val securityContext = contextService.getContext(securityTokenHashString)
+                    val securityContext = ContextService.getContext(securityTokenHashString)
 
                     if (securityContext == null) {
                         log.warn("Security token expired.")
@@ -92,10 +92,10 @@ class RestHandler : HttpHandler {
                         return
                     }
 
-                    contextService.setThreadContext(contextService.getContext(securityTokenHashString)!!)
+                    ContextService.setThreadContext(ContextService.getContext(securityTokenHashString)!!)
                 }
             } else {
-                contextService.setThreadContext(SecurityContext("anonymous", listOf(GROUP_ANONYMOUS), ByteArray(0), Date()))
+                ContextService.setThreadContext(SecurityContext("anonymous", listOf(GROUP_ANONYMOUS), ByteArray(0), Date()))
             }
 
             val startTimeMillis = System.currentTimeMillis()
@@ -114,13 +114,13 @@ class RestHandler : HttpHandler {
 
                 var requiredGroupFound = false
                 for (requiredGroup in processor.groups) {
-                    if (contextService.getThreadContext().groups.contains(requiredGroup)) {
+                    if (ContextService.getThreadContext().groups.contains(requiredGroup)) {
                         requiredGroupFound = true
                         break
                     }
                 }
                 if (!requiredGroupFound) {
-                    log.warn("Context ${contextService.getThreadContext().groups} does not have required groups ${processor.groups} for the API call: ${processor.method} ${processor.pathRegex}")
+                    log.warn("Context ${ContextService.getThreadContext().groups} does not have required groups ${processor.groups} for the API call: ${processor.method} ${processor.pathRegex}")
                     exchange.statusCode = StatusCodes.FORBIDDEN
                     return
                 }
@@ -159,7 +159,7 @@ class RestHandler : HttpHandler {
             log.warn("No implementation for Rest API $requestMethod $path")
             exchange.statusCode = StatusCodes.NOT_FOUND
         } finally {
-            contextService.clearThreadContext()
+            ContextService.clearThreadContext()
         }
     }
 }

@@ -4,7 +4,7 @@ import org.apache.log4j.xml.DOMConfigurator
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
-import org.kui.security.crypto
+import org.kui.security.Crypto
 import java.security.SecureRandom
 import java.util.*
 import javax.crypto.AEADBadTagException
@@ -36,9 +36,9 @@ class CryptoTest {
 
         val plainTextBytes = "test-data".toByteArray()
 
-        val cipherTextBytes = crypto.encrypt(nonce, aad, plainTextBytes)
+        val cipherTextBytes = Crypto.encrypt(nonce, aad, plainTextBytes)
 
-        val plainTextBytes2 = crypto.decrypt(nonce, aad, cipherTextBytes)
+        val plainTextBytes2 = Crypto.decrypt(nonce, aad, cipherTextBytes)
 
         val plainTextString2 = String(plainTextBytes2)
 

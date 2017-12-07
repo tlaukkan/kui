@@ -2,13 +2,13 @@ package org.kui.server.workers
 
 import org.slf4j.LoggerFactory
 import org.kui.api.model.WorkUnit
-import org.kui.security.safe
+import org.kui.security.Safe
 import org.kui.server.work.AbstractCoordinatedWorker
 import org.kui.server.work.addWorkUnit
-import org.kui.tag.environmentTagsDao
-import org.kui.tag.hostTypeTagsDao
-import org.kui.tag.logTagsDao
-import org.kui.util.send
+import org.kui.server.api.logs.environmentTagsDao
+import org.kui.server.api.logs.hostTypeTagsDao
+import org.kui.server.api.logs.logTagsDao
+import org.kui.util.SmtpUtil
 import views.alerts.activity.ActivityAlert
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,13 +19,13 @@ class ActivityAlertWorker : AbstractCoordinatedWorker(60000) {
 
     override fun createWorkUnits() {
         // Creating work units if they do not exist.
-        for (activityAlert in safe.getAll(ActivityAlert::class.java)) {
+        for (activityAlert in Safe.getAll(ActivityAlert::class.java)) {
             if (!activityAlert.workUnitCreated) {
                 val dataKey = activityAlert.key
                 val workerClass = ActivityAlertWorker::class.java
                 addWorkUnit(dataKey, workerClass)
                 activityAlert.workUnitCreated = true
-                safe.update(activityAlert)
+                Safe.update(activityAlert)
                 log.info("${host!!} added work unit ${dataKey} of ${workerClass}.")
             }
         }
@@ -33,7 +33,7 @@ class ActivityAlertWorker : AbstractCoordinatedWorker(60000) {
 
     override fun work(unit: WorkUnit): Boolean {
 
-        val activityAlert = safe.get(unit.dataKey!!, ActivityAlert::class.java)
+        val activityAlert = Safe.get(unit.dataKey!!, ActivityAlert::class.java)
 
         if (activityAlert != null) {
             while (check(activityAlert)) {
@@ -69,7 +69,7 @@ class ActivityAlertWorker : AbstractCoordinatedWorker(60000) {
             activityAlert.checkedSince = begin
         }
         activityAlert.checkedUntil = end
-        safe.update(activityAlert)
+        Safe.update(activityAlert)
 
         return true
     }
@@ -117,7 +117,7 @@ class ActivityAlertWorker : AbstractCoordinatedWorker(60000) {
             val message = "ALERT $beginString - $endString UTC system detected $tag activity at ${activityAlert.environment}${activityAlert.host} ${activityAlert.log} $count > ${activityAlert.max}."
             log.warn("$message, sending email to ${activityAlert.email}")
             if (!activityAlert.email.isNullOrBlank()) {
-                send(activityAlert.email!!, topic, message)
+                SmtpUtil.send(activityAlert.email!!, topic, message)
             }
         }
         if (activityAlert.min != null && count < activityAlert.min!!) {
@@ -125,7 +125,7 @@ class ActivityAlertWorker : AbstractCoordinatedWorker(60000) {
             val message = "ALERT: $beginString - $endString UTC system detected $tag inactivity at ${activityAlert.environment}${activityAlert.host} ${activityAlert.log} $count < ${activityAlert.min}."
             log.warn("$message, sending email to ${activityAlert.email}")
             if (!activityAlert.email.isNullOrBlank()) {
-                send(activityAlert.email!!, topic, message)
+                SmtpUtil.send(activityAlert.email!!, topic, message)
             }
         }
     }

@@ -3,8 +3,6 @@ package org.kui.server.api.users.login
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.kui.api.model.LogTagger
 import org.kui.api.model.Tagger
-import org.kui.log.environmentLogsDao
-import org.kui.log.hostLogsDao
 import org.kui.model.LogRow
 import org.kui.model.TimeValue
 import org.kui.security.*
@@ -13,7 +11,7 @@ import org.kui.server.api.users.LogBatch
 import org.kui.server.rest.StreamRestProcessor
 import org.kui.security.model.LogRecord
 import org.kui.security.model.Tag
-import org.kui.tag.*
+import org.kui.server.api.logs.*
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
@@ -29,7 +27,7 @@ class PostLogBatch : StreamRestProcessor("/api/log/batch", "POST", listOf(GROUP_
     fun getTaggers() : List<LogTagger> {
         if (taggers == null || System.currentTimeMillis() - lastTaggersLoadedMillis > 60 * 1000) {
             taggers = mutableListOf()
-            for (tagger in safe.getAll(Tagger::class.java)) {
+            for (tagger in Safe.getAll(Tagger::class.java)) {
                 taggers!!.add(LogTagger(
                         environment = getRegex(tagger.environment),
                         host = getRegex(tagger.host),
@@ -63,7 +61,7 @@ class PostLogBatch : StreamRestProcessor("/api/log/batch", "POST", listOf(GROUP_
 
         val batch = mapper.readValue(inputStream, LogBatch::class.java)
 
-        val user = contextService.getThreadContext().user
+        val user = ContextService.getThreadContext().user
 
         val environment = batch.environment!!
         val host = batch.host!!
@@ -71,10 +69,10 @@ class PostLogBatch : StreamRestProcessor("/api/log/batch", "POST", listOf(GROUP_
 
         synchronized(hosts) {
             if (!hosts.containsKey(host)) {
-                if (!safe.has(host, HostRecord::class.java)) {
-                    safe.add(HostRecord(key = host, hostType = batch.hostType, environment = environment, environmentType = batch.environmentType, owner = user))
+                if (!Safe.has(host, HostRecord::class.java)) {
+                    Safe.add(HostRecord(key = host, hostType = batch.hostType, environment = environment, environmentType = batch.environmentType, owner = user))
                 }
-                hosts[host] = safe.get(host, HostRecord::class.java)!!
+                hosts[host] = Safe.get(host, HostRecord::class.java)!!
             }
             if (!user.equals(hosts[host]!!.owner)) {
                 throw SecurityException("Non host $host owner updating logs: $user")
@@ -84,10 +82,10 @@ class PostLogBatch : StreamRestProcessor("/api/log/batch", "POST", listOf(GROUP_
         synchronized(logs) {
             val logKey = "$host.${log.toLowerCase().replace(Regex("[^A-Za-z0-9]"), ".")}"
             if (!logs.containsKey(logKey)) {
-                if (!safe.has(logKey, LogRecord::class.java)) {
-                    safe.add(LogRecord(key = logKey, host = host, log = log))
+                if (!Safe.has(logKey, LogRecord::class.java)) {
+                    Safe.add(LogRecord(key = logKey, host = host, log = log))
                 }
-                logs[logKey] = safe.get(logKey, LogRecord::class.java)!!
+                logs[logKey] = Safe.get(logKey, LogRecord::class.java)!!
             }
         }
 
