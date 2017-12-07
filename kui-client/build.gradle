@@ -38,7 +38,7 @@ dependencies {
     compile group: 'org.pojava', name: 'datetime', version: '1.0.2'
     compile 'com.neovisionaries:nv-websocket-client:2.3'
 
-    compile project(':kui-api')
+    compile project(':kui-common')
 
     testCompile group: 'commons-codec', name: 'commons-codec', version: '1.10'
     testCompile 'junit:junit:4.12'

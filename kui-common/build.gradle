@@ -24,25 +24,9 @@ dependencies {
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 
-    compile group: 'commons-io', name: 'commons-io', version: '2.4'
-    compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
-    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
-
-    compile 'com.datastax.cassandra:cassandra-driver-core:3.3.0'
-    compile 'io.netty:netty-tcnative-boringssl-static:2.0.5.Final'
-    compile group: 'org.pojava', name: 'datetime', version: '1.0.2'
-    compile group: 'commons-io', name: 'commons-io', version: '2.4'
     compile 'com.fasterxml.jackson.core:jackson-core:2.8.9'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.9'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
-
-    compile 'javax.mail:mail:1.4'
-    compile 'com.amazonaws:aws-java-sdk-dynamodb:1.11.186'
-    compile 'org.eclipse.persistence:javax.persistence:2.0.0'
-    compile 'org.eclipse.persistence:eclipselink:2.6.5'
-    compile 'com.h2database:h2:1.4.196'
-
-    compile project(':kui-api')
 
     testCompile 'junit:junit:4.12'
 }

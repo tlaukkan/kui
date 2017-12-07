@@ -43,7 +43,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.9'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
 
-    compile project(':kui-common')
+    compile project(':kui-core')
     compile project(':kui-client')
 
     testCompile 'com.github.jkcclemens:khttp:0.1.0'

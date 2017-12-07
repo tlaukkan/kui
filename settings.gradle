@@ -1,7 +1,7 @@
 rootProject.name = 'kui'
 
-include 'kui-api'
 include 'kui-common'
+include 'kui-core'
 include 'kui-client'
 include 'ui'
 include 'kui-web'
