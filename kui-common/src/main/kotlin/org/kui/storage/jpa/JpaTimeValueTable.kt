@@ -9,9 +9,7 @@ import java.util.*
 
 class JpaTimeValueTable(val type: String) : TimeValueTable {
 
-    val entityManager = entityManagerFactory.createEntityManager()
-
-    @Synchronized override fun insert(container: String, key: String, timeValues: List<TimeValue>) {
+    override fun insert(container: String, key: String, timeValues: List<TimeValue>) {
         val fullKey = "$type:$container:$key"
 
         var entities = mutableListOf<TimeValueEntity>()
@@ -33,6 +31,7 @@ class JpaTimeValueTable(val type: String) : TimeValueTable {
     }
 
     private fun addTimeValueEntities(timeValueEntities: List<TimeValueEntity>) {
+        val entityManager = entityManagerFactory.createEntityManager()
         entityManager.transaction.begin()
         try {
             for (timeValueEntity in timeValueEntities) {
@@ -46,7 +45,8 @@ class JpaTimeValueTable(val type: String) : TimeValueTable {
         }
     }
 
-    @Synchronized override fun select(beginId: UUID?, beginTime: Date, endTime_: Date, containers: List<String>, keys: List<String>): TimeValueResult {
+    override fun select(beginId: UUID?, beginTime: Date, endTime_: Date, containers: List<String>, keys: List<String>): TimeValueResult {
+        val entityManager = entityManagerFactory.createEntityManager()
         val container = containers[0]
         val key = keys[0]
         val fullKey = "$type:$container:$key"
@@ -86,7 +86,8 @@ class JpaTimeValueTable(val type: String) : TimeValueTable {
         }
     }
 
-    @Synchronized override fun selectCount(beginTime: Date, endTime_: Date, containers: List<String>, keys: List<String>): TimeValueCountResult {
+    override fun selectCount(beginTime: Date, endTime_: Date, containers: List<String>, keys: List<String>): TimeValueCountResult {
+        val entityManager = entityManagerFactory.createEntityManager()
         val container = containers[0]
         val key = keys[0]
         val fullKey = "$type:$container:$key"

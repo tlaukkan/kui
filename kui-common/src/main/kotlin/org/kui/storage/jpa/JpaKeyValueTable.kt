@@ -5,9 +5,8 @@ import org.kui.storage.KeyValueTable
 
 class JpaKeyValueTable : KeyValueTable {
 
-    val entityManager = entityManagerFactory.createEntityManager()
-
-    @Synchronized override fun add(key: String, type: String, bytes: ByteArray) {
+    override fun add(key: String, type: String, bytes: ByteArray) {
+        val entityManager = entityManagerFactory.createEntityManager()
         entityManager.transaction.begin()
         try {
             entityManager.persist(KeyValueEntity("$key:$type",key, type, bytes))
@@ -19,7 +18,8 @@ class JpaKeyValueTable : KeyValueTable {
         }
     }
 
-    @Synchronized override fun update(key: String, type: String, bytes: ByteArray) {
+    override fun update(key: String, type: String, bytes: ByteArray) {
+        val entityManager = entityManagerFactory.createEntityManager()
         entityManager.transaction.begin()
         try {
             val keyValueEntity = entityManager.find(KeyValueEntity::class.java, "$key:$type") ?: throw RuntimeException("Key value not found: $key:$type")
@@ -34,7 +34,8 @@ class JpaKeyValueTable : KeyValueTable {
         }
     }
 
-    @Synchronized override fun remove(key: String, type: String) {
+    override fun remove(key: String, type: String) {
+        val entityManager = entityManagerFactory.createEntityManager()
         entityManager.transaction.begin()
         try {
             val keyValueEntity = entityManager.find(KeyValueEntity::class.java, "$key:$type") ?: throw RuntimeException("Key value not found: $key:$type")
@@ -47,15 +48,19 @@ class JpaKeyValueTable : KeyValueTable {
         }
     }
 
-    @Synchronized override fun get(key: String, type: String): ByteArray? {
+    override fun get(key: String, type: String): ByteArray? {
+        val entityManager = entityManagerFactory.createEntityManager()
         return entityManager.find(KeyValueEntity::class.java, "$key:$type")?.bytes
     }
 
-    @Synchronized override fun has(key: String, type: String): Boolean {
+    override fun has(key: String, type: String): Boolean {
+        val entityManager = entityManagerFactory.createEntityManager()
         return entityManager.find(KeyValueEntity::class.java, "$key:$type") != null
     }
 
-    @Synchronized override fun getKeys(type: String): List<String> {
+    override fun getKeys(type: String): List<String> {
+        val entityManager = entityManagerFactory.createEntityManager()
+
         val query = entityManager.createQuery("select e from KeyValueEntity e where e.type = :type", KeyValueEntity::class.java)
         query.setParameter("type", type)
 
@@ -67,7 +72,9 @@ class JpaKeyValueTable : KeyValueTable {
         return entities
     }
 
-    @Synchronized override fun getWithKeyPrefix(keyStartsWith: String, type: String): List<KeyValueRow> {
+    override fun getWithKeyPrefix(keyStartsWith: String, type: String): List<KeyValueRow> {
+        val entityManager = entityManagerFactory.createEntityManager()
+
         val query = entityManager.createQuery("select e from KeyValueEntity e where e.key like :keyPrefix and e.type = :type", KeyValueEntity::class.java)
         query.setParameter("keyPrefix", "$keyStartsWith%")
         query.setParameter("type", type)
@@ -80,7 +87,9 @@ class JpaKeyValueTable : KeyValueTable {
         return keyValueRows
     }
 
-    @Synchronized override fun getAll(type: String): List<KeyValueRow> {
+    override fun getAll(type: String): List<KeyValueRow> {
+        val entityManager = entityManagerFactory.createEntityManager()
+
         val query = entityManager.createQuery("select e from KeyValueEntity e where e.type = :type", KeyValueEntity::class.java)
         query.setParameter("type", type)
 

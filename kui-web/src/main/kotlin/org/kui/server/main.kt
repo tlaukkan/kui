@@ -35,7 +35,7 @@ import java.security.KeyStore
 import java.util.*
 import javax.net.ssl.*
 
-private val log = LoggerFactory.getLogger("org.whiteicesecurity.server.main")
+private val log = LoggerFactory.getLogger("org.kui.server.main")
 
 
 fun main(args : Array<String>) {

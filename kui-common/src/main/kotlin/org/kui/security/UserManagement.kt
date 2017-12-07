@@ -8,7 +8,7 @@ import java.util.*
 
 class UserManagement {
 
-    private val log = LoggerFactory.getLogger("org.whiteicesecurity.security")
+    private val log = LoggerFactory.getLogger("org.kui.security")
 
     init {
 

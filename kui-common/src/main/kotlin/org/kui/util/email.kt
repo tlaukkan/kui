@@ -10,7 +10,7 @@ import javax.mail.internet.MimeMessage
 import javax.mail.internet.MimeMultipart
 import java.util.Date
 
-private val log = LoggerFactory.getLogger("org.whiteicesecurity.util.email")
+private val log = LoggerFactory.getLogger("org.kui.util.email")
 
 /**
  * Sends email.

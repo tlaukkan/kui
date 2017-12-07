@@ -1,4 +1,4 @@
-group 'org.whiteicesecurity'
+group 'org.kui'
 version '1.0-SNAPSHOT'
 
 buildscript {

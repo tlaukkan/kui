@@ -1,4 +1,4 @@
-group 'org.whiteicesecurity'
+group 'org.kui'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -62,7 +62,7 @@ jar {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
 
     manifest {
-        attributes 'Main-Class': 'org.whiteicesecurity.server.MainKt',
+        attributes 'Main-Class': 'org.kui.server.MainKt',
                 'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
     }
 }

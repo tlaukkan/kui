@@ -27,7 +27,6 @@ val PRIVILEGE_GET = "get"
 val PRIVILEGE_ADD = "add"
 val PRIVILEGE_UPDATE = "update"
 val PRIVILEGE_REMOVE = "remove"
-val PRIVILEGE_ADMINISTRATE = "admin"
 
 val contextService = ContextService()
 val crypto = Crypto()
@@ -53,8 +52,6 @@ fun getRequiredGroup(type: String, operation: String) : String {
     if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_REMOVE)) {
         return GROUP_ADMIN
     }
-
-
     if (type.equals(UserRecord::class.java.simpleName)) {
         return GROUP_ADMIN
     }
