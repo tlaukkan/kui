@@ -37,10 +37,10 @@ class UserManagement {
             grantGroup(USER_DEFAULT_ADMIN, GROUP_ADMIN)
             grantGroup(USER_DEFAULT_ADMIN, GROUP_USER)
 
-            val defaultAgentUser = UserRecord(getProperty("security","default.agent.user.name"), Date(), Date(), null, crypto.passwordHash(getProperty("security","default.agent.user.name"), getProperty("security","default.agent.user.password")))
-            keyValueDao.add(getProperty("security","default.agent.user.name"), defaultAgentUser)
-            //TODO create agent group
-            grantGroup(getProperty("security","default.agent.user.name"), GROUP_USER)
+            val defaultClientUser = UserRecord(getProperty("security","default.client.user.name"), Date(), Date(), null, crypto.passwordHash(getProperty("security","default.client.user.name"), getProperty("security","default.client.user.password")))
+            keyValueDao.add(getProperty("security","default.client.user.name"), defaultClientUser)
+            //TODO create client group
+            grantGroup(getProperty("security","default.client.user.name"), GROUP_USER)
 
             contextService.clearThreadContext()
         }

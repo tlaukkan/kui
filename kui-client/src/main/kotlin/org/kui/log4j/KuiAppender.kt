@@ -1,9 +1,9 @@
 package org.kui.log4j
 
-import agent.disableSslVerification
+import org.kui.client.disableSslVerification
 import org.apache.log4j.AppenderSkeleton
 import org.apache.log4j.spi.LoggingEvent
-import org.kui.agent.LogStorageClient
+import org.kui.client.LogStorageClient
 import org.kui.model.LogLine
 import org.kui.util.getProperty
 import org.kui.util.setProperty
@@ -19,22 +19,22 @@ class KuiAppender : AppenderSkeleton() {
 
     init {
         if (System.getenv("HOSTNAME") != null) {
-            println("Set agent host name according to environment variables: ${System.getenv("HOSTNAME")}")
-            setProperty("agent", "host", System.getenv("HOSTNAME"))
+            println("Set client host name according to environment variables: ${System.getenv("HOSTNAME")}")
+            setProperty("client", "host", System.getenv("HOSTNAME"))
         }
 
-        if (getProperty("agent", "log.storage.api.url").contains("127.0.0.1")) {
+        if (getProperty("client", "log.storage.api.url").contains("127.0.0.1")) {
             disableSslVerification()
         }
 
-        thread(true, true, null, "ice-appender-thread", -1, {
+        thread(true, true, null, "kui-appender-thread", -1, {
             sendLoop()
         })
     }
 
     fun sendLoop() {
 
-        val log = getProperty("agent", "appender.log")
+        val log = getProperty("client", "appender.log")
         while (true) {
             try {
                 Thread.sleep(10000)
@@ -94,7 +94,7 @@ class KuiAppender : AppenderSkeleton() {
         synchronized(events) {
             if (events.size > 100000) {
                 events.pop()
-                println("Ice appender event queue full (100000 log events). Dropping old events.")
+                println("KUI appender event queue full (100000 log events). Dropping old events.")
             }
             events.add(event)
         }

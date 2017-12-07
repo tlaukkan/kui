@@ -1,9 +1,7 @@
-package agent
+package org.kui.client
 
 import org.apache.log4j.xml.DOMConfigurator
 import org.slf4j.LoggerFactory
-import org.kui.agent.Agent
-import org.kui.agent.Monitor
 import org.kui.util.getProperty
 import org.kui.util.getZoneOffsetMillis
 import org.kui.util.setProperty
@@ -12,7 +10,7 @@ import java.security.NoSuchAlgorithmException
 import java.util.*
 import javax.net.ssl.*
 
-private val log = LoggerFactory.getLogger("agent.main")
+private val log = LoggerFactory.getLogger("org.kui.client.main")
 
 fun main(args : Array<String>) {
     DOMConfigurator.configure("log4j.xml")
@@ -22,15 +20,15 @@ fun main(args : Array<String>) {
     val monitor = Monitor().start()
 
     if (System.getenv("HOSTNAME") != null) {
-        println("Set agent host name according to environment variables: ${System.getenv("HOSTNAME")}")
-        setProperty("agent", "host", System.getenv("HOSTNAME"))
+        println("Set client host name according to environment variables: ${System.getenv("HOSTNAME")}")
+        setProperty("client", "host", System.getenv("HOSTNAME"))
     }
 
-    if (getProperty("agent", "log.storage.api.url").contains("127.0.0.1")) {
+    if (getProperty("client", "log.storage.api.url").contains("127.0.0.1")) {
         disableSslVerification()
     }
 
-    val agent = Agent()
+    val client = Client()
 
     Runtime.getRuntime().addShutdownHook(Thread({
         println("Shutdown at " + Date())
@@ -38,14 +36,14 @@ fun main(args : Array<String>) {
 
     while (true) {
         try {
-            if (!agent.isConnected()) {
-                if (!getProperty("agent","simulate").equals("true")) {
-                    agent.connect()
+            if (!client.isConnected()) {
+                if (!getProperty("client","simulate").equals("true")) {
+                    client.connect()
                 }
             }
-            agent.track()
+            client.track()
         } catch (e : Exception) {
-            agent.disconnect()
+            client.disconnect()
             log.error("Error in tracking logs.", e)
             Thread.sleep(10000)
         }

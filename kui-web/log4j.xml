@@ -13,16 +13,15 @@
         <param name="append" value="true" />
         <param name="maxFileSize" value="10MB" />
         <param name="maxBackupIndex" value="10" />
-        <param name="file" value="C:/Logs/white-ice-web-server.log" />
+        <param name="file" value="web.log" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
                    value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p %m [%t] %n" />
         </layout>
     </appender>
 
-    <appender name="ice" class="org.kui.log4j.KuiAppender">
+    <appender name="kui" class="org.kui.log4j.KuiAppender">
     </appender>
-
 
     <logger additivity="true" name="org.kui">
         <level value="debug"/>
@@ -40,7 +39,7 @@
         <priority value ="info" />
         <appender-ref ref="console" />
         <appender-ref ref="file" />
-        <appender-ref ref="ice" />
+        <appender-ref ref="kui" />
     </root>
 
 </log4j:configuration>

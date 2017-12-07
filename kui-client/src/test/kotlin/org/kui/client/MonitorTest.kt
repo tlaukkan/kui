@@ -1,4 +1,4 @@
-package org.kui.agent
+package org.kui.client
 
 import org.apache.commons.codec.binary.Hex
 import org.junit.Ignore

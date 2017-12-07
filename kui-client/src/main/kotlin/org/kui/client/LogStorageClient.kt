@@ -1,4 +1,4 @@
-package org.kui.agent
+package org.kui.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.lang.StringUtils
@@ -11,20 +11,20 @@ import java.util.*
 import java.net.InetSocketAddress
 
 /**
- * Log storage for agent.
+ * Log storage client.
  */
 class LogStorageClient {
 
     private val log = LoggerFactory.getLogger(LogStorageClient::class.java.name)
 
-    val hostEnvironmentType = getProperty("agent", "host.environment.type")
-    val hostEnvironment = getProperty("agent", "host.environment")
-    val hostType = getProperty("agent", "host.type")
-    val hostName = getProperty("agent", "host")
+    val hostEnvironmentType = getProperty("client", "host.environment.type")
+    val hostEnvironment = getProperty("client", "host.environment")
+    val hostType = getProperty("client", "host.type")
+    val hostName = getProperty("client", "host")
 
-    private val logStorageApiUrl = getProperty("agent", "log.storage.api.url")
-    private val logStorageUsername = getProperty("agent", "log.storage.username")
-    private val logStoragePassword = getProperty("agent", "log.storage.password")
+    private val logStorageApiUrl = getProperty("client", "log.storage.api.url")
+    private val logStorageUsername = getProperty("client", "log.storage.username")
+    private val logStoragePassword = getProperty("client", "log.storage.password")
 
     private val securityToken: String
 
@@ -77,7 +77,7 @@ class LogStorageClient {
         val response = post(url = "$logStorageApiUrl/log/batch", headers = headers, data = logBatch, cookies = cookieManager)
 
         if (response.responseCode != 200) {
-            throw AgentException("Failed to send logs. Status code: ${response.responseCode}")
+            throw ClientException("Failed to send logs. Status code: ${response.responseCode}")
         }
     }
 
@@ -106,7 +106,7 @@ class LogStorageClient {
             connection.setRequestProperty("Cookie", StringUtils.join(cookies.getCookieStore().getCookies(), ';'))
 
             connection.requestMethod = "POST"
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0")
+            connection.setRequestProperty("User-Client", "Mozilla/5.0")
             connection.setRequestProperty("Accept-Language", "en-US,en;q=0.5")
 
             // Send post request

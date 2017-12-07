@@ -1,4 +1,4 @@
-package org.kui.agent
+package org.kui.client
 
 import org.kui.model.LogLine
 import org.pojava.datetime.DateTime
@@ -40,7 +40,7 @@ class LineParser {
                 content = content.substring(1)
             }
 
-            if (getProperty("agent","simulate").equals("true")) {
+            if (getProperty("client","simulate").equals("true")) {
                 log.debug("Parsed line timestamp to date time value: ${parseResult.date}")
             }
             return LogLine(line = content, time = parseResult.date)

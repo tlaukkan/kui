@@ -14,8 +14,8 @@ images
 gradlew
 gradlew.bat
 *.iml
-white-ice-agent/log4j.xml
-white-ice-web-server/log4j.xml
-white-ice-web-server/src/dist
+kui-client/log4j.xml
+kui-web/log4j.xml
+kui-web/src/dist
 *.sh
 data/

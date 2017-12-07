@@ -56,7 +56,7 @@ jar {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
 
     manifest {
-        attributes 'Main-Class': 'agent.MainKt',
+        attributes 'Main-Class': 'org.kui.client.MainKt',
                 'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
     }
 }

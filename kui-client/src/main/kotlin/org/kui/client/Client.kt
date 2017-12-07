@@ -1,4 +1,4 @@
-package org.kui.agent
+package org.kui.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.kui.model.LogLine
@@ -15,15 +15,15 @@ import kotlin.streams.toList
 /**
  * Created by tlaukkan on 6/29/2017.
  */
-class Agent {
+class Client {
 
-    private val log = LoggerFactory.getLogger(Agent::class.java.name)
+    private val log = LoggerFactory.getLogger(Client::class.java.name)
 
     private val mapper = ObjectMapper()
     private val parser = LineParser()
     private var logStorageClient: LogStorageClient? = null
 
-    private val logPatterns = getProperty("agent", "logs").split(',').stream().map { log -> log.trim() }.toList()
+    private val logPatterns = getProperty("client", "logs").split(',').stream().map { log -> log.trim() }.toList()
 
     private val logPaths = mutableListOf<String>()
     private val logTracks = mutableMapOf<String, LogTrack>()

@@ -1,7 +1,10 @@
-package org.kui.agent
+package org.kui.client
 
 import org.junit.Assert
 import org.junit.Test
+import org.kui.client.parseDefaultTimestamp
+import org.kui.client.parseGenericTimestamp
+import org.kui.client.parseOldSyslogTimestamp
 import java.text.SimpleDateFormat
 
 class LineParserTest {

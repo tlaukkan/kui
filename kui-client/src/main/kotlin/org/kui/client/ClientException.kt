@@ -1,6 +1,6 @@
-package org.kui.agent
+package org.kui.client
 
-class AgentException : RuntimeException {
+class ClientException : RuntimeException {
 
     constructor(message: String?, exception: Exception) : super(message, exception)
 
