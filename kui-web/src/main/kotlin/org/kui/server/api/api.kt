@@ -12,6 +12,7 @@ fun getApiObjectMapper() : ObjectMapper {
 }
 
 fun getRecordClass(type: String) : Class<Record> {
+    //TODO add dynamic mapping
     if (type.equals("tagger")) {
         return Tagger::class.java as Class<Record>
     } else if (type.equals("activityalert")) {

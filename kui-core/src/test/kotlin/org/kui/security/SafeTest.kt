@@ -30,6 +30,12 @@ class SafeTest {
         Assert.assertFalse(Safe.has(testKey, TestRecord::class.java))
 
         Safe.add(testRecord)
+        try {
+            Safe.add(testRecord)
+            Assert.fail("Adding same record should throw security exception.")
+        } catch (e: SecurityException) {
+            Assert.assertEquals("Record already exists: test.key:org.kui.security.TestRecord", e.message)
+        }
         Assert.assertNotNull(Safe.get(testKey, TestRecord::class.java))
         Assert.assertTrue(Safe.has(testKey, TestRecord::class.java))
         Assert.assertEquals(testValue, Safe.get(testKey, TestRecord::class.java)!!.value)
