@@ -21,3 +21,10 @@ fun getOrCreateEntityManagerFactory() : EntityManagerFactory {
     }
     return theEntityManagerFactory!!
 }
+
+fun clearEntityManagerFactory() {
+    if (theEntityManagerFactory != null) {
+        theEntityManagerFactory!!.close()
+        theEntityManagerFactory = null
+    }
+}

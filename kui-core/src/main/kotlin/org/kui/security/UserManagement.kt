@@ -10,7 +10,7 @@ object UserManagement {
 
     private val log = LoggerFactory.getLogger("org.kui.security")
 
-    init {
+    fun initialize() {
 
         if (!keyValueDao.has(GROUP_SYSTEM, GroupRecord::class.java.name)) {
             val systemUser = UserRecord(USER_SYSTEM_USER, Date(), Date(), null, null)
@@ -26,7 +26,10 @@ object UserManagement {
             keyValueDao.add(userGroup.key!!, userGroup)
 
 
-            ContextService.setThreadContext(SecurityContext(systemUser.key!!, listOf(systemGroup.key!!, adminGroup.key!!), ByteArray(0), Date()))
+            val threadContextExisted = ContextService.hasThreadContext()
+            if (!threadContextExisted) {
+                ContextService.setThreadContext(SecurityContext(systemUser.key!!, listOf(systemGroup.key!!, adminGroup.key!!), ByteArray(0), Date()))
+            }
 
             grantGroup(systemUser.key!!, GROUP_SYSTEM)
             grantGroup(systemUser.key!!, GROUP_ADMIN)
@@ -42,13 +45,11 @@ object UserManagement {
             //TODO create client group
             grantGroup(getProperty("security","default.client.user.name"), GROUP_USER)
 
-            ContextService.clearThreadContext()
+            if (!threadContextExisted) {
+                ContextService.clearThreadContext()
+            }
         }
 
-    }
-
-    fun configure() {
-        log.info("Security configured.")
     }
 
     fun grantGroup(userKey: String, groupKey: String) {
@@ -139,6 +140,10 @@ object UserManagement {
 
     fun getUser(key: String) : UserRecord {
         return Safe.get(key, UserRecord::class.java)!!
+    }
+
+    fun hasUser(key: String) : Boolean {
+        return Safe.has(key, UserRecord::class.java)
     }
 
     fun addUser(key: String, email: String, password: String) : Unit {

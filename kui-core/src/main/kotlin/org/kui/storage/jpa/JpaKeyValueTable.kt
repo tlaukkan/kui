@@ -25,8 +25,8 @@ class JpaKeyValueTable : KeyValueTable {
             val keyValueEntity = entityManager.find(KeyValueEntity::class.java, "$key:$type") ?: throw RuntimeException("Key value not found: $key:$type")
             keyValueEntity!!.bytes = bytes
             entityManager.persist(entityManager.merge(keyValueEntity))
-            entityManager.detach(keyValueEntity)
             entityManager.transaction.commit()
+            entityManager.detach(keyValueEntity)
         } catch (e : Exception) {
             if (entityManager.transaction.isActive) {
                 entityManager.transaction.rollback()

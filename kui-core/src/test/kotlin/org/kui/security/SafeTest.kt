@@ -7,14 +7,10 @@ import org.junit.Test
 import org.kui.security.model.SecurityContext
 import java.util.*
 
-class SafeTest {
+class SafeTest : MemoryDatabaseTest() {
 
     @Test
-    @Ignore
     fun testSafe() {
-        DOMConfigurator.configure("log4j.xml")
-
-        ContextService.setThreadContext(SecurityContext(USER_DEFAULT_ADMIN, listOf(GROUP_USER, GROUP_ADMIN), ByteArray(0), Date()))
 
         val testKey = "test.key"
         val testValue = "test.value"

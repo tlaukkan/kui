@@ -95,4 +95,8 @@ object ContextService {
         }
         Thread.currentThread().name = ""
     }
+
+    fun hasThreadContext(): Boolean {
+        return threadContexts.containsKey(Thread.currentThread())
+    }
 }
