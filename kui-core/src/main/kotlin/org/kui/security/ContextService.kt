@@ -11,17 +11,17 @@ object ContextService {
     private val log = LoggerFactory.getLogger(ContextService::class.java.name)
 
     /**
-     * setThreadContext contexts contains context as long as thread is executing that context.
+     * Contains security context of a thread as long as thread is executing that context.
      */
     private val threadContexts = HashMap<Thread, SecurityContext>()
 
     /**
-     * Contexts contains contexts as long as they are valid.
+     * Contexts contains contexts as long as they have not expired or explicitly destroyed.
      */
     private val contexts = HashMap<String, SecurityContext>()
 
     /**
-     * Creates security context and security token.
+     * Creates security context and security token for [user] with given [groups] and assigns security token to it.
      * @return the security token
      */
     @Synchronized fun createContext(user: String, groups: List<String>): String {
@@ -34,14 +34,14 @@ object ContextService {
     }
 
     /**
-     * Gets security context.
-     * @param securityTokenHash the security token
+     * Gets security context from in memory with [securityTokenHash].
      * @return the security context
      */
     @Synchronized fun getContext(securityTokenHash: String) : SecurityContext? {
         val tokenHashes = contexts.keys.toList()
 
         // Destroy expired security contexts.
+        // TODO Move expiration to background thread.
         for (tokenHash in tokenHashes) {
             if (System.currentTimeMillis() - contexts[tokenHash]!!.lastAccess.time > 15 * 60 * 1000) {
                 log.info("Destroyed expired security context: " + contexts[tokenHash]!!.user)
@@ -53,20 +53,16 @@ object ContextService {
     }
 
     /**
-     * Destroys security context
-     * @param securityTokenHash the security token
+     * Destroys security context with given [securityTokenHash]
      */
     @Synchronized fun destroyContext(securityTokenHash: String) {
         contexts.remove(securityTokenHash)
     }
 
     /**
-     * Sets security context to thread.
-     * @param context the context
-     *
-     * @return
+     * Sets security [context] to thread.
      */
-    @Synchronized fun setThreadContext(context: SecurityContext): Unit {
+    @Synchronized fun setThreadContext(context: SecurityContext) {
         if (threadContexts.containsKey(Thread.currentThread())) {
             throw SecurityException("Security context already exists for thread.")
         }
@@ -96,6 +92,9 @@ object ContextService {
         Thread.currentThread().name = ""
     }
 
+    /**
+     * Checks whether thread security context exists.
+     */
     fun hasThreadContext(): Boolean {
         return threadContexts.containsKey(Thread.currentThread())
     }

@@ -10,7 +10,7 @@ import org.kui.security.model.HostRecord
 import org.kui.security.model.LogRecord
 import org.kui.security.model.Tag
 import org.kui.server.storage.*
-import org.kui.storage.TimeValue
+import org.kui.storage.model.TimeValue
 import java.util.*
 
 object LogService {

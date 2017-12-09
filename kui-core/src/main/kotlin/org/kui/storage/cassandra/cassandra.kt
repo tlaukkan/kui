@@ -1,7 +1,5 @@
 package org.kui.storage.cassandra
 
-import org.kui.storage.TimeUuidGenerator
-import org.kui.storage.cassandra.CassandraCredentials
 import org.kui.util.getProperty
 import java.util.*
 

@@ -5,6 +5,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.kui.storage.jpa.JpaKeyValueTable
 import org.kui.storage.jpa.JpaTimeValueTable
+import org.kui.storage.model.TimeValue
 import java.util.*
 
 class JpaTest {

@@ -1,5 +1,8 @@
 package org.kui.storage
 
+import org.kui.storage.model.TimeValue
+import org.kui.storage.model.TimeValueCountResult
+import org.kui.storage.model.TimeValueResult
 import java.util.*
 
 interface TimeValueTable {

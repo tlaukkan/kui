@@ -90,26 +90,6 @@ object UserManagement {
         checkGroup(getRequiredGroup(recordType, operation))
     }
 
-    //TODO Create dynamic mapping
-    fun getRequiredGroup(type: String, operation: String) : String {
-        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_UPDATE)) {
-            return GROUP_ADMIN
-        }
-        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_REMOVE)) {
-            return GROUP_ADMIN
-        }
-        if (type.equals(UserRecord::class.java.simpleName)) {
-            return GROUP_ADMIN
-        }
-        if (type.equals(GroupRecord::class.java.simpleName)) {
-            return GROUP_ADMIN
-        }
-        if (type.equals(GroupMemberRecord::class.java.simpleName)) {
-            return GROUP_ADMIN
-        }
-        return GROUP_USER
-    }
-
     fun getUserGroups(user: String) : List<String> {
         val keyPrefix = "u:$user:"
         val groupMemberRecords = keyValueDao.getWithKeyPrefix(keyPrefix, GroupMemberRecord::class.java)
@@ -205,4 +185,23 @@ object UserManagement {
         return passwordHash contentEquals userRecord.passwordHash!!
     }
 
+    //TODO Create dynamic mapping
+    private fun getRequiredGroup(type: String, operation: String) : String {
+        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_UPDATE)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_REMOVE)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(UserRecord::class.java.simpleName)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(GroupRecord::class.java.simpleName)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(GroupMemberRecord::class.java.simpleName)) {
+            return GROUP_ADMIN
+        }
+        return GROUP_USER
+    }
 }

@@ -1,9 +1,11 @@
 package org.kui.storage.cassandra
 
 import com.datastax.driver.core.*
-import org.kui.storage.*
-import org.kui.storage.TimeUuidGenerator
 import org.kui.storage.TimeValueTable
+import org.kui.storage.model.TimeValue
+import org.kui.storage.model.TimeValueCountResult
+import org.kui.storage.model.TimeValueResult
+import org.kui.storage.model.TimeValueRow
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.time.LocalDate

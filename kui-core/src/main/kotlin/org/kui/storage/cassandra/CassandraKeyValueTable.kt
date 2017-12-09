@@ -1,7 +1,7 @@
 package org.kui.storage.cassandra
 
 import com.datastax.driver.core.*
-import org.kui.storage.KeyValueRow
+import org.kui.storage.model.KeyValueRow
 import org.kui.storage.KeyValueTable
 import java.nio.ByteBuffer
 

@@ -1,6 +1,6 @@
 package org.kui.storage.jpa
 
-import org.kui.storage.KeyValueRow
+import org.kui.storage.model.KeyValueRow
 import org.kui.storage.KeyValueTable
 
 class JpaKeyValueTable : KeyValueTable {

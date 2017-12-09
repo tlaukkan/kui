@@ -1,4 +1,4 @@
-package org.kui.storage;
+package org.kui.storage.cassandra;
 
 import com.google.common.base.Charsets;
 

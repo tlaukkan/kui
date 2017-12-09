@@ -8,7 +8,7 @@ import org.kui.security.GROUP_USER
 import org.kui.server.StreamRestProcessor
 import org.kui.server.storage.environmentLogsDao
 import org.kui.server.storage.hostLogsDao
-import org.kui.storage.TimeValueResult
+import org.kui.storage.model.TimeValueResult
 import java.io.InputStream
 import java.io.OutputStream
 import java.time.LocalDate

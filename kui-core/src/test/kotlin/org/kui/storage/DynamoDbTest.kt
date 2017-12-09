@@ -6,6 +6,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.kui.storage.dynamodb.DynamoDbKeyValueTable
 import org.kui.storage.dynamodb.DynamoDbTimeValueTable
+import org.kui.storage.model.TimeValue
 import java.util.*
 
 class DynamoDbTest {

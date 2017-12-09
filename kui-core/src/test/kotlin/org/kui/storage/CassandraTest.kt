@@ -6,6 +6,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.kui.storage.cassandra.CassandraKeyValueTable
 import org.kui.storage.cassandra.CassandraTimeValueTable
+import org.kui.storage.model.TimeValue
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*

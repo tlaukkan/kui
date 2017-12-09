@@ -1,5 +1,7 @@
 package org.kui.storage
 
+import org.kui.storage.model.KeyValueRow
+
 interface KeyValueTable {
     fun add(key: String, type: String, bytes: ByteArray)
     fun update(key: String, type: String, bytes: ByteArray)

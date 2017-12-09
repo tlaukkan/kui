@@ -3,13 +3,16 @@ package org.kui.storage.dynamodb
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Item
 import com.amazonaws.services.dynamodbv2.document.Table
-import org.kui.storage.*
 import java.util.*
 import com.amazonaws.services.dynamodbv2.document.TableWriteItems
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap
 import com.amazonaws.services.dynamodbv2.model.*
 import org.kui.storage.TimeValueTable
+import org.kui.storage.model.TimeValue
+import org.kui.storage.model.TimeValueCountResult
+import org.kui.storage.model.TimeValueResult
+import org.kui.storage.model.TimeValueRow
 import java.nio.ByteBuffer
 
 fun getTimeValueTable(dynamoDb: DynamoDB, tableName: String) : Table {

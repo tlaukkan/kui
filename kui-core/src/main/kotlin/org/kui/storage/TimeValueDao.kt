@@ -4,6 +4,9 @@ import org.kui.security.Crypto
 import org.kui.storage.cassandra.CassandraTimeValueTable
 import org.kui.storage.dynamodb.DynamoDbTimeValueTable
 import org.kui.storage.jpa.JpaTimeValueTable
+import org.kui.storage.model.TimeValue
+import org.kui.storage.model.TimeValueResult
+import org.kui.storage.model.TimeValueRow
 import org.kui.util.getProperty
 import java.util.*
 

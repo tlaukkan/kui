@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap
 import com.amazonaws.services.dynamodbv2.model.*
-import org.kui.storage.KeyValueRow
+import org.kui.storage.model.KeyValueRow
 import org.kui.storage.KeyValueTable
 import java.util.ArrayList
 
