@@ -5,9 +5,9 @@ import org.kui.api.model.WorkUnit
 import org.kui.security.Safe
 import org.kui.server.work.AbstractCoordinatedWorker
 import org.kui.server.work.addWorkUnit
-import org.kui.server.api.logs.environmentTagsDao
-import org.kui.server.api.logs.hostTypeTagsDao
-import org.kui.server.api.logs.logTagsDao
+import org.kui.server.storage.environmentTagsDao
+import org.kui.server.storage.hostTypeTagsDao
+import org.kui.server.storage.logTagsDao
 import org.kui.util.SmtpUtil
 import views.alerts.activity.ActivityAlert
 import java.text.SimpleDateFormat

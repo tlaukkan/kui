@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.lang.StringUtils
 import org.kui.api.model.LogBatch
 import org.kui.api.model.LogLine
-import org.kui.client.ClientException
+import org.kui.KuiException
 import org.slf4j.LoggerFactory
 import org.kui.util.getProperty
 import java.net.*
@@ -78,7 +78,7 @@ class LogStorageClient {
         val response = post(url = "$logStorageApiUrl/log/batch", headers = headers, data = logBatch, cookies = cookieManager)
 
         if (response.responseCode != 200) {
-            throw ClientException("Failed to send logs. Status code: ${response.responseCode}")
+            throw KuiException("Failed to send logs. Status code: ${response.responseCode}")
         }
     }
 

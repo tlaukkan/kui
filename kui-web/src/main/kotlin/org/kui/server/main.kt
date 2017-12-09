@@ -13,7 +13,10 @@ import org.slf4j.LoggerFactory
 import org.kui.client.monitor.Monitor
 import org.kui.security.*
 import org.kui.security.model.SecurityContext
+import org.kui.server.api.logs.GetHosts
 import org.kui.server.api.logs.GetLogRows
+import org.kui.server.api.logs.GetLogs
+import org.kui.server.api.logs.PostLogBatch
 import org.kui.server.api.safe.*
 import org.kui.server.api.users.*
 import org.kui.server.api.users.login.*

@@ -1,6 +1,6 @@
-package org.kui.client
+package org.kui
 
-class ClientException : RuntimeException {
+class KuiException : RuntimeException {
 
     constructor(message: String?, exception: Exception) : super(message, exception)
 

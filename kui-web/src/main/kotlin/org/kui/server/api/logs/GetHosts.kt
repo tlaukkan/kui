@@ -1,4 +1,4 @@
-package org.kui.server.api.users
+package org.kui.server.api.logs
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.kui.security.GROUP_USER

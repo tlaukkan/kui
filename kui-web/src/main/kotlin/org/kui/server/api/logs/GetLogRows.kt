@@ -6,6 +6,8 @@ import org.kui.model.LogResult
 import org.kui.model.LogRow
 import org.kui.security.GROUP_USER
 import org.kui.server.rest.StreamRestProcessor
+import org.kui.server.storage.environmentLogsDao
+import org.kui.server.storage.hostLogsDao
 import org.kui.storage.TimeValueResult
 import java.io.InputStream
 import java.io.OutputStream
@@ -31,7 +33,6 @@ class GetLogRows : StreamRestProcessor("/api/log/rows", "GET", listOf(GROUP_USER
         val beginTime: Date
         if (parameters.containsKey("beginTime")) {
             beginTime = Date(parameters["beginTime"]!!.toLong())
-            //println(beginTime)
         } else {
             beginTime = Date.from(today.toInstant(ZoneOffset.UTC))
         }
@@ -39,12 +40,9 @@ class GetLogRows : StreamRestProcessor("/api/log/rows", "GET", listOf(GROUP_USER
         val endTime: Date
         if (parameters.containsKey("endTime")) {
             endTime = Date(parameters["endTime"]!!.toLong())
-            //println(endTime)
         } else {
             endTime = Date.from(tomorrow.toInstant(ZoneOffset.UTC))
         }
-
-        //println("${beginTime}: $endTime")
 
         var environments: List<String> = emptyList()
         if (parameters.containsKey("environments") && parameters["environments"]!!.length > 0) {
@@ -78,8 +76,9 @@ class GetLogRows : StreamRestProcessor("/api/log/rows", "GET", listOf(GROUP_USER
         }
 
 
-        val logRows = arrayListOf<LogRow>()
         val mapper = ObjectMapper()
+
+        val logRows = arrayListOf<LogRow>()
         val result: TimeValueResult
         if (hosts.size > 0) {
             result = hostLogsDao.get(beginId, beginTime, endTime, hosts, logs)
