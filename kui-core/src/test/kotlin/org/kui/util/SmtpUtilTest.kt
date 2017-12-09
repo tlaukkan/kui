@@ -1,18 +1,12 @@
 package org.kui.util
 
-import org.apache.log4j.xml.DOMConfigurator
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
 import org.jvnet.mock_javamail.Mailbox
+import org.kui.UnitTest
 import javax.mail.internet.MimeMultipart
 
-class SmtpUtilTest {
-
-    @Before
-    fun before() {
-        DOMConfigurator.configure("log4j.xml")
-    }
+class SmtpUtilTest : UnitTest() {
 
     @Test
     fun testSend() {

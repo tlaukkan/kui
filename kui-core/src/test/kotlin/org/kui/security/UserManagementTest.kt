@@ -1,8 +1,9 @@
 package org.kui.security
 
 import org.junit.*
+import org.kui.DatabaseUnitTest
 
-class UserManagementTest : MemoryDatabaseTest() {
+class UserManagementTest : DatabaseUnitTest() {
 
     @Test
     fun testUserManagement() {

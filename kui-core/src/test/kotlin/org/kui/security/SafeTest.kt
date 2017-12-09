@@ -1,13 +1,10 @@
 package org.kui.security
 
-import org.apache.log4j.xml.DOMConfigurator
 import org.junit.Assert
-import org.junit.Ignore
 import org.junit.Test
-import org.kui.security.model.SecurityContext
-import java.util.*
+import org.kui.DatabaseUnitTest
 
-class SafeTest : MemoryDatabaseTest() {
+class SafeTest : DatabaseUnitTest() {
 
     @Test
     fun testSafe() {

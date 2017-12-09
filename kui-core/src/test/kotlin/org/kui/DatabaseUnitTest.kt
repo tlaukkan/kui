@@ -1,15 +1,16 @@
-package org.kui.security
+package org.kui
 
 import org.apache.log4j.xml.DOMConfigurator
 import org.junit.After
 import org.junit.Before
+import org.kui.security.*
 import org.kui.security.model.SecurityContext
 import org.kui.storage.jpa.clearEntityManagerFactory
 import org.kui.storage.jpa.entityManagerFactory
 import java.sql.Connection
 import java.util.*
 
-open class MemoryDatabaseTest {
+open class DatabaseUnitTest {
 
     @Before
     fun before() {
