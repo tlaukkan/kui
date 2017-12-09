@@ -31,7 +31,7 @@ class DynamoDbTest {
 
         val endTime = Date()
 
-        Assert.assertEquals(3, testTable.select(null, beginTime, endTime, listOf(testContainer), listOf(testKey)).rows.size)
+        Assert.assertEquals(3, testTable.select(beginTime, null, endTime, listOf(testContainer), listOf(testKey)).rows.size)
 
         Assert.assertEquals(3, testTable.selectCount(beginTime, endTime, listOf(testContainer), listOf(testKey)).count)
     }

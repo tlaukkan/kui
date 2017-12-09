@@ -29,15 +29,15 @@ class JpaTest {
 
         val endTime = Date()
 
-        val firstResult = testTable.select(null, beginTime, endTime, listOf(testContainer), listOf(testKey))
+        val firstResult = testTable.select(beginTime, null, endTime, listOf(testContainer), listOf(testKey))
         Assert.assertEquals(1000, firstResult.rows.size)
         Assert.assertNotNull(firstResult.nextBeginId)
 
-        val secondResult = testTable.select(UUID.fromString(firstResult.nextBeginId), beginTime, endTime, listOf(testContainer), listOf(testKey))
+        val secondResult = testTable.select(beginTime, UUID.fromString(firstResult.nextBeginId), endTime, listOf(testContainer), listOf(testKey))
         Assert.assertEquals(1000, secondResult.rows.size)
         Assert.assertNotNull(secondResult.nextBeginId)
 
-        val thirdResult = testTable.select(UUID.fromString(secondResult.nextBeginId), beginTime, endTime, listOf(testContainer), listOf(testKey))
+        val thirdResult = testTable.select(beginTime, UUID.fromString(secondResult.nextBeginId), endTime, listOf(testContainer), listOf(testKey))
         Assert.assertEquals(500, thirdResult.rows.size)
         Assert.assertNull(thirdResult.nextBeginId)
 
@@ -46,7 +46,7 @@ class JpaTest {
 
         Thread.sleep(100)
 
-        val fourthResult = testTable.select(UUID.fromString(thirdResult.rows.last().id), beginTime, Date(), listOf(testContainer), listOf(testKey))
+        val fourthResult = testTable.select(beginTime, UUID.fromString(thirdResult.rows.last().id), Date(), listOf(testContainer), listOf(testKey))
         Assert.assertEquals(1, fourthResult.rows.size)
         Assert.assertNull(fourthResult.nextBeginId)
     }

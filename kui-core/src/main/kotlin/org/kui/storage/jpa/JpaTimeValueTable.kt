@@ -41,7 +41,7 @@ class JpaTimeValueTable(val type: String) : TimeValueTable {
         }
     }
 
-    override fun select(beginId: UUID?, beginTime: Date, endTime_: Date, containers: List<String>, keys: List<String>): TimeValueResult {
+    override fun select(beginTime: Date, beginId: UUID?, endTime_: Date, containers: List<String>, keys: List<String>): TimeValueResult {
         val entityManager = entityManagerFactory.createEntityManager()
         val container = containers[0]
         val key = keys[0]

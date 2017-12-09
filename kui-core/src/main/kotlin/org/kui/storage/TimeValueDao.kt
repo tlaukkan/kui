@@ -30,9 +30,9 @@ class TimeValueDao(table: String) {
         timeValueTable.insert(container, key, encryptedValues)
     }
 
-    fun get(beginId: UUID?, beginTime: Date, endTime: Date, containers: List<String>, keys: List<String>): TimeValueResult {
+    fun get(beginTime: Date, beginId: UUID?, endTime: Date, containers: List<String>, keys: List<String>): TimeValueResult {
         val values = arrayListOf<TimeValueRow>()
-        val result = timeValueTable.select(beginId, beginTime, endTime, containers, keys)
+        val result = timeValueTable.select(beginTime, beginId, endTime, containers, keys)
         for (row in result.rows) {
             val meta = ("${row.container}:${row.key}:${row.time.time}")
             val nonce = meta.hashCode().toString().toByteArray()

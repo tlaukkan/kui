@@ -32,7 +32,7 @@ class CassandraTest {
         val beginTime = Date.from(today.toInstant(ZoneOffset.UTC))
         val endTime = Date.from(tomorrow.toInstant(ZoneOffset.UTC))
 
-        Assert.assertEquals(1, testTable.select(null, beginTime, endTime, listOf(testContainer), listOf(testKey)).rows.size)
+        Assert.assertEquals(1, testTable.select(beginTime, null, endTime, listOf(testContainer), listOf(testKey)).rows.size)
     }
 
     @Test
@@ -54,7 +54,7 @@ class CassandraTest {
         val beginTime = Date.from(today.toInstant(ZoneOffset.UTC))
         val endTime = Date.from(tomorrow.toInstant(ZoneOffset.UTC))
 
-        Assert.assertEquals(1, testDao.get(null, beginTime, endTime, listOf(testContainer), listOf(testKey)).rows.size)
+        Assert.assertEquals(1, testDao.get(beginTime, null, endTime, listOf(testContainer), listOf(testKey)).rows.size)
     }
 
     @Test

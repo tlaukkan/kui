@@ -80,7 +80,7 @@ class DynamoDbTimeValueTable(val type: String) : TimeValueTable, DynamoDbTable()
         }
     }
 
-    override fun select(beginId: UUID?, beginTime: Date, endTime_: Date, containers: List<String>, keys: List<String>): TimeValueResult {
+    override fun select(beginTime: Date, beginId: UUID?, endTime_: Date, containers: List<String>, keys: List<String>): TimeValueResult {
         val container = containers[0]
         val key = keys[0]
         val fullKey = "$type:$container:$key"

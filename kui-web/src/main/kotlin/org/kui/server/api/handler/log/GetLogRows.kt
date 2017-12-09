@@ -81,9 +81,9 @@ class GetLogRows : StreamRestProcessor("/api/log/rows", "GET", listOf(GROUP_USER
         val logRows = arrayListOf<LogRow>()
         val result: TimeValueResult
         if (hosts.size > 0) {
-            result = hostLogsDao.get(beginId, beginTime, endTime, hosts, logs)
+            result = hostLogsDao.get(beginTime, beginId, endTime, hosts, logs)
         } else {
-            result = environmentLogsDao.get(beginId, beginTime, endTime, environments, logs)
+            result = environmentLogsDao.get(beginTime, beginId, endTime, environments, logs)
         }
         for (timeValueRow in result.rows) {
             val logRow = mapper.readValue(timeValueRow.value, LogRow::class.java)

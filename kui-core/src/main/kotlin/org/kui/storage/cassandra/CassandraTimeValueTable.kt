@@ -64,7 +64,7 @@ open class CassandraTimeValueTable(table: String, truncate: Boolean = false) : C
         }
     }
 
-    override fun select(beginId: UUID?, beginTime: Date, endTime_: Date, containers: List<String>, key: List<String>) : TimeValueResult {
+    override fun select(beginTime: Date, beginId: UUID?, endTime_: Date, containers: List<String>, key: List<String>) : TimeValueResult {
 
         val endTime: Date
         val endTimeChanged: Boolean
