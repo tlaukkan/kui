@@ -15,7 +15,7 @@ open class DatabaseUnitTest {
     @Before
     fun before() {
         DOMConfigurator.configure("log4j.xml")
-        UserManagement.initialize()
+        UserManagement.configure()
         ContextService.setThreadContext(SecurityContext(USER_DEFAULT_ADMIN, listOf(GROUP_USER, GROUP_ADMIN), ByteArray(0), Date()))
     }
 

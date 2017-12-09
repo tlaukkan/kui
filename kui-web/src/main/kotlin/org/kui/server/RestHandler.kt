@@ -55,8 +55,7 @@ class RestHandler : HttpHandler {
                         return
                     }
 
-                    val passwordHash = Crypto.passwordHash(username, password!!)
-                    if (!(passwordHash contentEquals userRecord.passwordHash!!)) {
+                    if (!UserManagement.validatePassword(username, password)) {
                         log.warn("Basic authentication failed due to password mismatch: $username")
                         userRecord.passwordLoginFailed = Date()
                         keyValueDao.update(userRecord.key!!, userRecord)

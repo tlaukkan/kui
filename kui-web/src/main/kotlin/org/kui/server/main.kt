@@ -63,7 +63,7 @@ fun configureServer(): Undertow {
         setProperty("work", "host", System.getenv("HOSTNAME"))
     }
 
-    UserManagement.initialize()
+    UserManagement.configure()
 
     val sslContext = createSSLContext(
             loadKeyStore(getProperty("web", "web.keystore.path"), getProperty("web", "web.keystore.password")),

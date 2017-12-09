@@ -6,11 +6,17 @@ import org.kui.storage.keyValueDao
 import org.kui.util.getProperty
 import java.util.*
 
+/**
+ * User management service provides:
+ * - user and group management functions
+ */
 object UserManagement {
-
     private val log = LoggerFactory.getLogger("org.kui.security")
 
-    fun initialize() {
+    /**
+     * Configures user management. If this is first startup then adds default users and groups.
+     */
+    fun configure() {
 
         if (!keyValueDao.has(GROUP_SYSTEM, GroupRecord::class.java.name)) {
             val systemUser = UserRecord(USER_SYSTEM_USER, Date(), Date(), null, null)
@@ -52,6 +58,9 @@ object UserManagement {
 
     }
 
+    /**
+     * Grants user identified by [userKey] membership to group identified by [groupKey].
+     */
     fun grantGroup(userKey: String, groupKey: String) {
         checkPrivilege(groupKey, GroupRecord::class.java.name, PRIVILEGE_UPDATE)
 
@@ -62,6 +71,9 @@ object UserManagement {
         log.info("AUDIT '${ContextService.getThreadContext().user}' granted '$userKey' membership to '$groupKey'.")
     }
 
+    /**
+     * Revokes user identified by [userKey] membership from group identified by [groupKey].
+     */
     fun revokeGroup(userKey: String, groupKey: String) {
         checkPrivilege(groupKey, GroupRecord::class.java.name, PRIVILEGE_UPDATE)
 
@@ -71,6 +83,10 @@ object UserManagement {
         log.info("AUDIT '${ContextService.getThreadContext().user}' revoked '$userKey' membership from '$groupKey'.")
     }
 
+    /**
+     * Checks if current user has membership in group identified by [groupKey].
+     * @throws SecurityException if current user does not have the membership.
+     */
     fun checkGroup(groupKey: String){
         val context = ContextService.getThreadContext()
         if (context.groups.contains(groupKey)) {
@@ -82,14 +98,27 @@ object UserManagement {
         throw SecurityException("Context $context did not have group $groupKey.")
     }
 
+    /**
+     * Checks if current user has privilege to do an [operation] on a [record].
+     * @throws SecurityException if current user does not have the privilege.
+     */
     fun checkPrivilege(record: Record, operation: String) {
         checkPrivilege(record.key!!, record.javaClass.name, operation)
     }
 
+    /**
+     * Checks if current user has privilege to do an [operation] on a record of [recordType]
+     * and identified by [recordKey].
+     * @throws SecurityException if current user does not have the privilege.
+     */
     fun checkPrivilege(recordKey: String, recordType: String, operation: String) {
         checkGroup(getRequiredGroup(recordType, operation))
     }
 
+    /**
+     * Gets groups of [user].
+     * @return list of group keys
+     */
     fun getUserGroups(user: String) : List<String> {
         val keyPrefix = "u:$user:"
         val groupMemberRecords = keyValueDao.getWithKeyPrefix(keyPrefix, GroupMemberRecord::class.java)
@@ -102,6 +131,10 @@ object UserManagement {
         return groups
     }
 
+    /**
+     * Gets [group] members.
+     * @return list of user keys having [group] membership.
+     */
     fun getGroupMembers(group: String) : List<String> {
         val keyPrefix = "g:$group:"
         val groupMemberRecords = keyValueDao.getWithKeyPrefix(keyPrefix, GroupMemberRecord::class.java)
@@ -114,18 +147,35 @@ object UserManagement {
         return users
     }
 
+    /**
+     * Gets users.
+     * @return list of users
+     */
     fun getUsers() : List<UserRecord> {
         return Safe.getAll(UserRecord::class.java)
     }
 
+    /**
+     * Gets user identified by [key].
+     * @return the user
+     */
     fun getUser(key: String) : UserRecord {
         return Safe.get(key, UserRecord::class.java)!!
     }
 
+    /**
+     * Gets user identified by [key].
+     * @return TRUE if user exists.
+     */
     fun hasUser(key: String) : Boolean {
         return Safe.has(key, UserRecord::class.java)
     }
 
+    /**
+     * Adds user identified by [key].
+     * @param email the email address
+     * @param password the password
+     */
     fun addUser(key: String, email: String, password: String) : Unit {
         if (password.length < 12) {
             throw SecurityException("Passwords under length of 12 are prohibited.")
@@ -135,7 +185,12 @@ object UserManagement {
         log.info("AUDIT '${ContextService.getThreadContext().user}' added user '$key'.")
     }
 
-    fun updateUser(key: String, email: String, password: String?) : Unit {
+    /**
+     * Updates user information identified by [key].
+     * @param email the email address
+     * @param password the password
+     */
+    fun updateUser(key: String, email: String, password: String?) {
         val userRecord = Safe.get(key, UserRecord::class.java)!!
         userRecord.email = email
         if (password != null) {
@@ -148,21 +203,28 @@ object UserManagement {
         log.info("AUDIT '${ContextService.getThreadContext().user}' updated user '$key'.")
     }
 
-
-    fun removeUser(key: String) : Unit {
+    /**
+     * Removes user identified by [key].
+     */
+    fun removeUser(key: String) {
         Safe.remove(key, UserRecord::class.java)
         log.info("AUDIT '${ContextService.getThreadContext().user}' removed user '$key'.")
     }
 
-    fun getGroup(group: String) : GroupRecord {
-        return keyValueDao.get(group, GroupRecord::class.java)!!
+    /**
+     * Gets group identified by [key].
+     */
+    fun getGroup(key: String) : GroupRecord {
+        return keyValueDao.get(key, GroupRecord::class.java)!!
     }
 
-    private fun createGroupPrivilegeKey(groupKey: String, recordKey: String, recordType: String?, operation: String) = "g:$groupKey:$recordKey:$recordType:$operation"
-
-    private fun createRecordPrivilegeKey(recordKey: String, recordType: String?, groupKey: String, operation: String) = "r:$recordKey:$recordType:$groupKey:$operation"
-
-    fun changeOwnPassword(oldPassword: String, newPassword: String) : Unit {
+    /**
+     * Changes current user password.
+     * @param oldPassword the old password.
+     * @param newPassword the new password.
+     * @throws SecurityException if [oldPassword] does not match the current password of the current user.
+     */
+    fun changeCurrentUserPassword(oldPassword: String, newPassword: String) : Unit {
         val key = ContextService.getThreadContext().user
         val userRecord = keyValueDao.get(key, UserRecord::class.java)!!
 
@@ -179,14 +241,21 @@ object UserManagement {
         log.info("AUDIT $key changed password.")
     }
 
+    /**
+     * Validates [password] of user identified by [userKey].
+     */
     fun validatePassword(userKey: String, password: String) : Boolean {
         val userRecord = keyValueDao.get(userKey, UserRecord::class.java) ?: return false
         val passwordHash = Crypto.passwordHash(userKey, password)
         return passwordHash contentEquals userRecord.passwordHash!!
     }
 
-    //TODO Create dynamic mapping
+    /**
+     * Gets required group for applying [operation] on given safe record [type].
+     * @return group key
+     */
     private fun getRequiredGroup(type: String, operation: String) : String {
+        //TODO Create dynamic mapping
         if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_UPDATE)) {
             return GROUP_ADMIN
         }
