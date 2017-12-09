@@ -20,18 +20,35 @@ class JpaTest {
 
         val testTable = JpaTimeValueTable("test_time_value")
 
-        testTable.insert(testContainer, testKey, listOf(
-                TimeValue(Date(), "test-log-line-1".toByteArray()),
-                TimeValue(Date(), "test-log-line-2".toByteArray()),
-                TimeValue(Date(), "test-log-line-3".toByteArray())))
+        for (i in 1..2500) {
+            testTable.insert(testContainer, testKey, listOf(
+                    TimeValue(Date(), "test-log-line-$i".toByteArray())))
+        }
 
         Thread.sleep(100)
 
         val endTime = Date()
 
-        Assert.assertEquals(3, testTable.select(null, beginTime, endTime, listOf(testContainer), listOf(testKey)).rows.size)
+        val firstResult = testTable.select(null, beginTime, endTime, listOf(testContainer), listOf(testKey))
+        Assert.assertEquals(1000, firstResult.rows.size)
+        Assert.assertNotNull(firstResult.nextBeginId)
 
-        Assert.assertEquals(3, testTable.selectCount(beginTime, endTime, listOf(testContainer), listOf(testKey)).count)
+        val secondResult = testTable.select(UUID.fromString(firstResult.nextBeginId), beginTime, endTime, listOf(testContainer), listOf(testKey))
+        Assert.assertEquals(1000, secondResult.rows.size)
+        Assert.assertNotNull(secondResult.nextBeginId)
+
+        val thirdResult = testTable.select(UUID.fromString(secondResult.nextBeginId), beginTime, endTime, listOf(testContainer), listOf(testKey))
+        Assert.assertEquals(500, thirdResult.rows.size)
+        Assert.assertNull(thirdResult.nextBeginId)
+
+        testTable.insert(testContainer, testKey, listOf(
+                TimeValue(Date(), "test-log-line-2501".toByteArray())))
+
+        Thread.sleep(100)
+
+        val fourthResult = testTable.select(UUID.fromString(thirdResult.rows.last().id), beginTime, Date(), listOf(testContainer), listOf(testKey))
+        Assert.assertEquals(1, fourthResult.rows.size)
+        Assert.assertNull(fourthResult.nextBeginId)
     }
 
     @Test
