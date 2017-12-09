@@ -51,8 +51,10 @@ class JpaTimeValueTable(val type: String) : TimeValueTable {
         query.setParameter("key", fullKey)
         query.setParameter("beginTime", beginTime)
         query.setParameter("endTime", endTime_)
+        query.setMaxResults(1000)
 
         val rows = mutableListOf<TimeValueRow>()
+        val beginIdString = beginId.toString()
         var beginIdFound = false
 
         for (item in query.resultList) {
@@ -61,8 +63,9 @@ class JpaTimeValueTable(val type: String) : TimeValueTable {
             val received = item.received!!
             val value = item.bytes
 
-            if (beginId != null && beginId.equals(id)) {
+            if (beginId != null && beginIdString.equals(id)) {
                 beginIdFound = true
+                continue
             }
 
             if (beginId != null && !beginIdFound) {
@@ -72,10 +75,9 @@ class JpaTimeValueTable(val type: String) : TimeValueTable {
             rows.add(TimeValueRow(id, container, key, time, received, value))
         }
 
-        if (rows.count() == 1001) {
+        if (rows.count() == 1000) {
             val endTime = rows.last().time
             val nextBeginId = rows.last().id
-            rows.removeAt(rows.lastIndex)
             return TimeValueResult(endTime, nextBeginId, rows)
         } else {
             return TimeValueResult(null, null, rows)
