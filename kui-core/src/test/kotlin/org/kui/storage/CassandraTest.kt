@@ -1,11 +1,9 @@
 package org.kui.storage
 
-import getCassandraCredentials
 import org.apache.log4j.xml.DOMConfigurator
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
-import org.kui.model.TimeValue
 import org.kui.storage.cassandra.CassandraKeyValueTable
 import org.kui.storage.cassandra.CassandraTimeValueTable
 import java.time.LocalDate

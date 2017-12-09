@@ -2,11 +2,7 @@ package org.kui.storage
 
 import org.apache.log4j.xml.DOMConfigurator
 import org.junit.Assert
-import org.junit.Ignore
 import org.junit.Test
-import org.kui.model.TimeValue
-import org.kui.storage.dynamodb.DynamoDbKeyValueTable
-import org.kui.storage.dynamodb.DynamoDbTimeValueTable
 import org.kui.storage.jpa.JpaKeyValueTable
 import org.kui.storage.jpa.JpaTimeValueTable
 import java.util.*

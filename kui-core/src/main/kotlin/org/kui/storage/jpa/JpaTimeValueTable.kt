@@ -1,10 +1,6 @@
 package org.kui.storage.jpa
 
-import org.kui.model.TimeValue
-import org.kui.model.TimeValueCountResult
-import org.kui.model.TimeValueResult
-import org.kui.model.TimeValueRow
-import org.kui.storage.TimeValueTable
+import org.kui.storage.*
 import java.util.*
 
 class JpaTimeValueTable(val type: String) : TimeValueTable {

@@ -3,7 +3,6 @@ package org.kui.storage.cassandra
 import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.NettySSLOptions
 import com.datastax.driver.core.Session
-import getCassandraCredentials
 import io.netty.handler.ssl.SslContextBuilder
 import io.netty.handler.ssl.SslProvider
 import org.kui.util.getProperty

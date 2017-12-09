@@ -1,13 +1,12 @@
 package org.kui.server.api.users.login
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.kui.api.model.LogBatch
 import org.kui.api.model.LogTagger
 import org.kui.api.model.Tagger
 import org.kui.model.LogRow
-import org.kui.model.TimeValue
 import org.kui.security.*
 import org.kui.security.model.HostRecord
-import org.kui.server.api.users.LogBatch
 import org.kui.server.rest.StreamRestProcessor
 import org.kui.security.model.LogRecord
 import org.kui.security.model.Tag
@@ -15,6 +14,7 @@ import org.kui.server.api.logs.*
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
+import org.kui.storage.*
 
 class PostLogBatch : StreamRestProcessor("/api/log/batch", "POST", listOf(GROUP_USER)) {
 

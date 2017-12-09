@@ -1,9 +1,9 @@
 package org.kui.client.tracker
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.kui.model.LogLine
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.filefilter.WildcardFileFilter
+import org.kui.api.model.LogLine
 import org.slf4j.LoggerFactory
 import org.kui.util.getProperty
 import java.io.*

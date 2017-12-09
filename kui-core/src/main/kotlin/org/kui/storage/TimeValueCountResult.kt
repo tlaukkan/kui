@@ -1,4 +1,4 @@
-package org.kui.model
+package org.kui.storage
 
 import java.util.*
 

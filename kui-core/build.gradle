@@ -44,6 +44,7 @@ dependencies {
 
     compile project(':kui-common')
 
+    testCompile 'org.jvnet.mock-javamail:mock-javamail:1.9'
     testCompile 'junit:junit:4.12'
 }
 

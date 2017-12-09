@@ -2,10 +2,10 @@ package org.kui.client.tracker
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.commons.lang.StringUtils
+import org.kui.api.model.LogBatch
+import org.kui.api.model.LogLine
 import org.kui.client.ClientException
 import org.slf4j.LoggerFactory
-import org.kui.model.LogLine
-import org.kui.server.api.users.LogBatch
 import org.kui.util.getProperty
 import java.net.*
 import java.util.*

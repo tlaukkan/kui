@@ -1,6 +1,6 @@
 package org.kui.client.tracker
 
-import org.kui.model.LogLine
+import org.kui.api.model.LogLine
 import org.pojava.datetime.DateTime
 import org.slf4j.LoggerFactory
 import org.kui.util.getProperty

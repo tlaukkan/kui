@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.kui.model.LogResult
 import org.kui.model.LogRow
-import org.kui.model.TimeValueResult
 import org.kui.security.GROUP_USER
 import org.kui.server.rest.StreamRestProcessor
+import org.kui.storage.TimeValueResult
 import java.io.InputStream
 import java.io.OutputStream
 import java.time.LocalDate

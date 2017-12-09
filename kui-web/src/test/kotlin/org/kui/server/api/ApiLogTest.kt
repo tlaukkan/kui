@@ -6,9 +6,9 @@ import khttp.post
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
-import org.kui.model.LogLine
+import org.kui.api.model.LogBatch
+import org.kui.api.model.LogLine
 import org.kui.model.LogRow
-import org.kui.server.api.users.LogBatch
 import java.util.*
 
 class ApiLogTest : ApiTest() {

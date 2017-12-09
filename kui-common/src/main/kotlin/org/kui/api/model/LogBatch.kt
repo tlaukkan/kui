@@ -1,6 +1,4 @@
-package org.kui.server.api.users
-
-import org.kui.model.LogLine
+package org.kui.api.model
 
 data class LogBatch (
         var environment: String? = null,
