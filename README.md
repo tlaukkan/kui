@@ -21,6 +21,6 @@ Project consists of the following modules:
 
 * kui-client, programmatic API client providing currently example functions of resource monitor and log aggregation to web server.
 * kui-common, shared API model and utility classes between kui-client and kui-web.
-* kui-core, core implementation is user by kui-web and currently includes security, storage and utility classes.
+* kui-core, core implementation includes security, storage and utility classes.
 * kui-web, embedded Undertow web server provides rest API and static asset loading.
     * ui, bootstrap 4 and KotlinJS web UI
