@@ -8,7 +8,8 @@ out
 images
 *.log*
 *.dat
-*-ext.properties
+kui-client/*-ext.properties
+kui-web/*-ext.properties
 *-ext-example.properties
 *.truststore
 gradlew
