@@ -62,7 +62,7 @@ object UserManagement {
      * Grants user identified by [userKey] membership to group identified by [groupKey].
      */
     fun grantGroup(userKey: String, groupKey: String) {
-        checkPrivilege(groupKey, GroupRecord::class.java.simpleName.toLowerCase(), PRIVILEGE_UPDATE)
+        Safe.checkPrivilege(GroupRecord::class.java.simpleName.toLowerCase(), PRIVILEGE_UPDATE)
 
         val groupUserMember = GroupMemberRecord("g:$groupKey:$userKey", Date(), Date(), groupKey, userKey)
         keyValueDao.add(groupUserMember.key!!, groupUserMember)
@@ -75,7 +75,7 @@ object UserManagement {
      * Revokes user identified by [userKey] membership from group identified by [groupKey].
      */
     fun revokeGroup(userKey: String, groupKey: String) {
-        checkPrivilege(groupKey, GroupRecord::class.java.simpleName.toLowerCase(), PRIVILEGE_UPDATE)
+        Safe.checkPrivilege(GroupRecord::class.java.simpleName.toLowerCase(), PRIVILEGE_UPDATE)
 
         keyValueDao.remove("g:$groupKey:$userKey", GroupMemberRecord::class.java.simpleName.toLowerCase())
         keyValueDao.remove("u:$userKey:$groupKey", GroupMemberRecord::class.java.simpleName.toLowerCase())
@@ -87,32 +87,17 @@ object UserManagement {
      * Checks if current user has membership in group identified by [groupKey].
      * @throws SecurityException if current user does not have the membership.
      */
-    fun checkGroup(groupKey: String){
+    fun checkGroup(groupKeys: List<String>){
         val context = ContextService.getThreadContext()
-        if (context.groups.contains(groupKey)) {
-            return
+        for (groupKey in groupKeys) {
+            if (context.groups.contains(groupKey)) {
+                return
+            }
         }
         if (context.groups.contains(GROUP_SYSTEM)) {
             return
         }
-        throw SecurityException("Context $context did not have group $groupKey.")
-    }
-
-    /**
-     * Checks if current user has privilege to do an [operation] on a [record].
-     * @throws SecurityException if current user does not have the privilege.
-     */
-    fun checkPrivilege(record: Record, operation: String) {
-        checkPrivilege(record.key!!, record.javaClass.simpleName.toLowerCase(), operation)
-    }
-
-    /**
-     * Checks if current user has privilege to do an [operation] on a record of [recordType]
-     * and identified by [recordKey].
-     * @throws SecurityException if current user does not have the privilege.
-     */
-    fun checkPrivilege(recordKey: String, recordType: String, operation: String) {
-        checkGroup(getRequiredGroup(recordType, operation))
+        throw SecurityException("${context.user} did not have any of the permitted groups: $groupKeys.")
     }
 
     /**
@@ -250,27 +235,4 @@ object UserManagement {
         return passwordHash contentEquals userRecord.passwordHash!!
     }
 
-    /**
-     * Gets required group for applying [operation] on given safe record [type].
-     * @return group key
-     */
-    private fun getRequiredGroup(type: String, operation: String) : String {
-        //TODO Create dynamic mapping
-        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_UPDATE)) {
-            return GROUP_ADMIN
-        }
-        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_REMOVE)) {
-            return GROUP_ADMIN
-        }
-        if (type.equals(UserRecord::class.java.simpleName)) {
-            return GROUP_ADMIN
-        }
-        if (type.equals(GroupRecord::class.java.simpleName)) {
-            return GROUP_ADMIN
-        }
-        if (type.equals(GroupMemberRecord::class.java.simpleName)) {
-            return GROUP_ADMIN
-        }
-        return GROUP_USER
-    }
 }

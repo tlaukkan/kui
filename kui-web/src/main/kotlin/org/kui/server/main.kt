@@ -73,7 +73,10 @@ fun main(args : Array<String>) {
 
 fun configureServer(): Undertow {
     Safe.registerType(WorkerHost::class.java)
+    Safe.permitAllOperations(WorkerHost::class.java, listOf(GROUP_SYSTEM))
+
     Safe.registerType(WorkUnit::class.java)
+    Safe.permitAllOperations(WorkUnit::class.java, listOf(GROUP_SYSTEM))
 
     val sslContext = createSSLContext(
             loadKeyStore(getProperty("web", "web.keystore.path"), getProperty("web", "web.keystore.password")),

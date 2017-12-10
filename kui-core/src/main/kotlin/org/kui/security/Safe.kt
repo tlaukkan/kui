@@ -18,16 +18,60 @@ object Safe {
      * Class type map.
      */
     private val classTypeMap = mutableMapOf<Class<out Record>, String>()
+    /**
+     * Map of privilege and list of permitted groups.
+     */
+    private val privilegeGroupMap = mutableMapOf<String, List<String>>()
 
     /**
      * Initialize core safe record types.
      */
     init {
-        Safe.registerType(GroupMemberRecord::class.java)
-        Safe.registerType(GroupRecord::class.java)
-        Safe.registerType(HostRecord::class.java)
-        Safe.registerType(LogRecord::class.java)
-        Safe.registerType(UserRecord::class.java)
+        registerType(GroupMemberRecord::class.java)
+        permitOperation(GroupMemberRecord::class.java, PRIVILEGE_ADD, listOf(GROUP_ADMIN))
+        permitOperation(GroupMemberRecord::class.java, PRIVILEGE_UPDATE, listOf(GROUP_ADMIN))
+        permitOperation(GroupMemberRecord::class.java, PRIVILEGE_REMOVE, listOf(GROUP_ADMIN))
+        permitOperation(GroupMemberRecord::class.java, PRIVILEGE_GET, listOf(GROUP_ADMIN))
+
+        registerType(GroupRecord::class.java)
+        permitOperation(GroupRecord::class.java, PRIVILEGE_ADD, listOf(GROUP_ADMIN))
+        permitOperation(GroupRecord::class.java, PRIVILEGE_UPDATE, listOf(GROUP_ADMIN))
+        permitOperation(GroupRecord::class.java, PRIVILEGE_REMOVE, listOf(GROUP_ADMIN))
+        permitOperation(GroupRecord::class.java, PRIVILEGE_GET, listOf(GROUP_ADMIN))
+
+        registerType(HostRecord::class.java)
+        permitOperation(HostRecord::class.java, PRIVILEGE_ADD, listOf(GROUP_USER))
+        permitOperation(HostRecord::class.java, PRIVILEGE_UPDATE, listOf(GROUP_ADMIN))
+        permitOperation(HostRecord::class.java, PRIVILEGE_REMOVE, listOf(GROUP_ADMIN))
+        permitOperation(HostRecord::class.java, PRIVILEGE_GET, listOf(GROUP_USER))
+
+        registerType(LogRecord::class.java)
+        permitAllOperations(LogRecord::class.java, listOf(GROUP_USER))
+
+        registerType(UserRecord::class.java)
+        permitOperation(UserRecord::class.java, PRIVILEGE_ADD, listOf(GROUP_ADMIN))
+        permitOperation(UserRecord::class.java, PRIVILEGE_UPDATE, listOf(GROUP_ADMIN))
+        permitOperation(UserRecord::class.java, PRIVILEGE_REMOVE, listOf(GROUP_ADMIN))
+        permitOperation(UserRecord::class.java, PRIVILEGE_GET, listOf(GROUP_ADMIN))
+
+        /*
+        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_UPDATE)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(HostRecord::class.java.simpleName) && operation.equals(PRIVILEGE_REMOVE)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(UserRecord::class.java.simpleName)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(GroupRecord::class.java.simpleName)) {
+            return GROUP_ADMIN
+        }
+        if (type.equals(GroupMemberRecord::class.java.simpleName)) {
+            return GROUP_ADMIN
+        }
+        */
+
     }
 
     /**
@@ -71,7 +115,7 @@ object Safe {
             throw SecurityException("Record key ${record.key} may not contain ':' character as it is reserved as key part delimiter.")
         }
 
-        UserManagement.checkPrivilege(record, PRIVILEGE_ADD)
+        checkPrivilege(record, PRIVILEGE_ADD)
 
         record.created = Date()
         record.modified = Date()
@@ -90,7 +134,7 @@ object Safe {
      * Updates [record] in safe.
      */
     fun update(record: Record) {
-        UserManagement.checkPrivilege(record, PRIVILEGE_UPDATE)
+        checkPrivilege(record, PRIVILEGE_UPDATE)
 
         record.modified = Date()
 
@@ -125,7 +169,7 @@ object Safe {
      * Removes record of [type] with given [key] from safe.
      */
     private fun remove(key: String, type: String) {
-        UserManagement.checkPrivilege(key, type, PRIVILEGE_REMOVE)
+        checkPrivilege(type, PRIVILEGE_REMOVE)
         if (has(key, type)) {
             keyValueDao.remove(key, type)
         }
@@ -153,7 +197,7 @@ object Safe {
     fun <T : Record> get(key: String, clazz: Class<T>): T? {
         val type = getType(clazz)
         if (keyValueDao.has(key, clazz)) {
-            UserManagement.checkPrivilege(key, type, PRIVILEGE_GET)
+            checkPrivilege(type, PRIVILEGE_GET)
         }
         return keyValueDao.get(key, clazz)
     }
@@ -175,7 +219,7 @@ object Safe {
         val records = keyValueDao.get(clazz)
         val type = getType(clazz)
         for (record in records) {
-            UserManagement.checkPrivilege(record.key!!, type, PRIVILEGE_GET)
+            checkPrivilege(type, PRIVILEGE_GET)
         }
         return records
     }
@@ -188,8 +232,60 @@ object Safe {
         val records = keyValueDao.getWithKeyPrefix(keyPrefix, clazz)
         val type = getType(clazz)
         for (record in records) {
-            UserManagement.checkPrivilege(record.key!!, type, PRIVILEGE_GET)
+            checkPrivilege(type, PRIVILEGE_GET)
         }
         return records
     }
+
+    /**
+     * Checks if current user has privilege to do an [operation] on a [record].
+     * @throws SecurityException if current user does not have the privilege.
+     */
+    fun checkPrivilege(record: Record, operation: String) {
+        checkPrivilege(record.javaClass.simpleName.toLowerCase(), operation)
+    }
+
+    /**
+     * Checks if current user has privilege to do an [operation] on a record of [recordType]
+     * and identified by [recordKey].
+     * @throws SecurityException if current user does not have the privilege.
+     */
+    fun checkPrivilege(recordType: String, operation: String) {
+        UserManagement.checkGroup(getRequiredGroup(recordType, operation))
+    }
+
+    /**
+     * Gets required group for applying [operation] on given safe record [type].
+     * @return group key
+     */
+    @Synchronized private fun getRequiredGroup(type: String, operation: String) : List<String> {
+        val privilege = "$type/$operation"
+        if (privilegeGroupMap.containsKey(privilege)) {
+            return privilegeGroupMap[privilege]!!
+        }
+        return listOf(GROUP_SYSTEM)
+    }
+
+    /**
+     * Grant []operation] on a [type] for listed [groups].
+     */
+    @Synchronized fun permitOperation(clazz: Class<out Record>, operation: String, groups: List<String>) {
+        val type = getType(clazz)
+        val privilege = "$type/$operation"
+        if (privilegeGroupMap.containsKey(privilege)) {
+            throw SecurityException("$privilege permitted groups already set.")
+        }
+        privilegeGroupMap.put(privilege, groups)
+    }
+
+    /**
+     * Permits all operations on record class [clazz] for [groups].
+     */
+    fun permitAllOperations(clazz: Class<out Record>, groups: List<String>) {
+        permitOperation(clazz, PRIVILEGE_ADD, listOf(GROUP_USER))
+        permitOperation(clazz, PRIVILEGE_UPDATE, listOf(GROUP_USER))
+        permitOperation(clazz, PRIVILEGE_REMOVE, listOf(GROUP_USER))
+        permitOperation(clazz, PRIVILEGE_GET, listOf(GROUP_USER))
+    }
+
 }
