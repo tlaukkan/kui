@@ -19,7 +19,7 @@ class KeyValueDao {
             }
 
     fun add(key: String, value: Any) {
-        val type = value.javaClass.name
+        val type = value.javaClass.simpleName.toLowerCase()
         val mapper = ObjectMapper()
         val keyAndType = (key + ":" + type)
         val nonce = keyAndType.hashCode().toString().toByteArray()
@@ -30,7 +30,7 @@ class KeyValueDao {
     }
 
     fun update(key: String, value: Any) {
-        val type = value.javaClass.name
+        val type = value.javaClass.simpleName.toLowerCase()
         val mapper = ObjectMapper()
         val keyAndType = (key + ":" + type)
         val nonce = keyAndType.hashCode().toString().toByteArray()
@@ -41,7 +41,7 @@ class KeyValueDao {
     }
 
     fun <T> remove(key: String, clazz: Class<T>) {
-        remove(key, clazz.name)
+        remove(key, clazz.simpleName.toLowerCase())
     }
 
     fun remove(key: String, type: String) {
@@ -49,7 +49,7 @@ class KeyValueDao {
     }
 
     fun <T> has(key: String, clazz: Class<T>): Boolean {
-        return has(key, clazz.name)
+        return has(key, clazz.simpleName.toLowerCase())
     }
 
     fun has(key: String, type: String): Boolean {
@@ -66,7 +66,7 @@ class KeyValueDao {
     }
 
     fun <T> get(key: String, clazz: Class<T>): T? {
-        val type = clazz.name
+        val type = clazz.simpleName.toLowerCase()
         val mapper = ObjectMapper()
         val keyAndType = (key + ":" + type)
         val nonce = keyAndType.hashCode().toString().toByteArray()
@@ -94,7 +94,7 @@ class KeyValueDao {
     }
 
     fun <T> get(clazz: Class<T>): List<T> {
-        val type = clazz.name
+        val type = clazz.simpleName.toLowerCase()
         val mapper = ObjectMapper()
         val resultSet = keyValueTable.getAll(type)
         val values = arrayListOf<T>()
@@ -113,7 +113,7 @@ class KeyValueDao {
     }
 
     fun <T> getWithKeyPrefix(keyPrefix: String, clazz: Class<T>): List<T> {
-        val type = clazz.name
+        val type = clazz.simpleName.toLowerCase()
         val mapper = ObjectMapper()
         val resultSet = keyValueTable.getWithKeyPrefix(keyPrefix, type)
         val values = arrayListOf<T>()

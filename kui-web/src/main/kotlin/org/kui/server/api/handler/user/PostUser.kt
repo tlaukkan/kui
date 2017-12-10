@@ -6,7 +6,7 @@ import org.kui.security.GROUP_USER
 import org.kui.security.UserManagement
 import org.kui.server.api.getApiObjectMapper
 import org.kui.api.model.User
-import org.kui.server.StreamRestProcessor
+import org.kui.server.api.StreamRestProcessor
 import java.io.InputStream
 import java.io.OutputStream
 

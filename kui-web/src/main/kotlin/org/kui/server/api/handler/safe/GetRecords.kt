@@ -4,7 +4,7 @@ import org.kui.security.GROUP_USER
 import org.kui.server.api.getRecordClass
 import org.kui.security.Safe
 import org.kui.server.api.getApiObjectMapper
-import org.kui.server.StreamRestProcessor
+import org.kui.server.api.StreamRestProcessor
 import java.io.InputStream
 import java.io.OutputStream
 

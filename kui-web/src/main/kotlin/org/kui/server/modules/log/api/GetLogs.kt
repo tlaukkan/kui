@@ -1,11 +1,11 @@
-package org.kui.server.api.handler.log
+package org.kui.server.modules.log.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.kui.security.GROUP_USER
 import org.kui.security.model.Log
 import org.kui.security.model.LogRecord
 import org.kui.security.Safe
-import org.kui.server.StreamRestProcessor
+import org.kui.server.api.StreamRestProcessor
 import java.io.InputStream
 import java.io.OutputStream
 

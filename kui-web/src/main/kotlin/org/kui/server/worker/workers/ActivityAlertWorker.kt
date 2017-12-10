@@ -3,11 +3,9 @@ package org.kui.server.worker.workers
 import org.slf4j.LoggerFactory
 import org.kui.server.worker.WorkUnit
 import org.kui.security.Safe
+import org.kui.server.modules.log.LogModule
 import org.kui.server.worker.AbstractCoordinatedWorker
 import org.kui.server.worker.addWorkUnit
-import org.kui.server.storage.environmentTagsDao
-import org.kui.server.storage.hostTypeTagsDao
-import org.kui.server.storage.logTagsDao
 import org.kui.util.SmtpUtil
 import views.alerts.activity.ActivityAlert
 import java.text.SimpleDateFormat
@@ -88,16 +86,16 @@ class ActivityAlertWorker : AbstractCoordinatedWorker(60000) {
         if (!environment.isNullOrBlank()) {
             if (hostType.isNullOrBlank()) {
                 val container = "$environment.$logKey"
-                val count = environmentTagsDao.count(begin, end, listOf(container), listOf(tag))
+                val count = LogModule.environmentTagsDao.count(begin, end, listOf(container), listOf(tag))
                 check(activityAlert, count, tag, container, begin, end)
             } else {
                 val container = "$environment.$host.$logKey"
-                val count = hostTypeTagsDao.count(begin, end, listOf(container), listOf(tag))
+                val count = LogModule.hostTypeTagsDao.count(begin, end, listOf(container), listOf(tag))
                 check(activityAlert, count, tag, container, begin, end)
             }
         } else if (!host.isNullOrBlank()) {
             val container = "$host.$logKey"
-            val count = logTagsDao.count(begin, end, listOf(container), listOf(tag))
+            val count = LogModule.logTagsDao.count(begin, end, listOf(container), listOf(tag))
             check(activityAlert, count, tag, container, begin, end)
         } else {
             return

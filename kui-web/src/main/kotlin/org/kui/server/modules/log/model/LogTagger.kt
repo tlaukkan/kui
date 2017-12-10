@@ -1,4 +1,4 @@
-package org.kui.server.service
+package org.kui.server.modules.log.model
 
 data class LogTagger (
         var environment: Regex? = null,

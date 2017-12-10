@@ -1,4 +1,4 @@
-package org.kui.server.service
+package org.kui.server.modules.log.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.kui.api.model.LogBatch
@@ -9,7 +9,8 @@ import org.kui.security.Safe
 import org.kui.security.model.HostRecord
 import org.kui.security.model.LogRecord
 import org.kui.security.model.Tag
-import org.kui.server.storage.*
+import org.kui.server.modules.log.LogModule
+import org.kui.server.modules.log.model.LogTagger
 import org.kui.storage.model.TimeValue
 import java.util.*
 
@@ -58,15 +59,15 @@ object LogService {
             rowTimeValues.add(timeValue)
         }
 
-        environmentLogsDao.add(environment, log, rowTimeValues)
-        hostLogsDao.add(host, log, rowTimeValues)
+        LogModule.environmentLogsDao.add(environment, log, rowTimeValues)
+        LogModule.hostLogsDao.add(host, log, rowTimeValues)
 
         val logKey = "${log.toLowerCase().replace(Regex("[^A-Za-z0-9]"), "")}"
         for (key in tagTimeValues.keys) {
             val values: MutableList<TimeValue> = tagTimeValues[key]!!
-            environmentTagsDao.add("${batch.environment}.${logKey}", key, values)
-            hostTypeTagsDao.add("${batch.environment}.${batch.hostType}.${logKey}", key, values)
-            logTagsDao.add("${batch.host}.${logKey}", key, values)
+            LogModule.environmentTagsDao.add("${batch.environment}.${logKey}", key, values)
+            LogModule.hostTypeTagsDao.add("${batch.environment}.${batch.hostType}.${logKey}", key, values)
+            LogModule.logTagsDao.add("${batch.host}.${logKey}", key, values)
         }
     }
 

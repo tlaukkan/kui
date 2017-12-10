@@ -13,15 +13,21 @@ import org.slf4j.LoggerFactory
 import org.kui.client.monitor.Monitor
 import org.kui.security.*
 import org.kui.security.model.SecurityContext
-import org.kui.server.api.handler.log.GetHosts
-import org.kui.server.api.handler.log.GetLogRows
-import org.kui.server.api.handler.log.GetLogs
-import org.kui.server.api.handler.log.PostLogBatch
+import org.kui.server.api.RestHandler
+import org.kui.server.modules.log.api.GetHosts
+import org.kui.server.modules.log.api.GetLogRows
+import org.kui.server.modules.log.api.GetLogs
+import org.kui.server.modules.log.api.PostLogBatch
 import org.kui.server.api.handler.safe.*
 import org.kui.server.api.users.*
 import org.kui.server.api.users.login.*
+import org.kui.server.modules.log.LogModule
+import org.kui.server.modules.vr.VrModule
+import org.kui.server.worker.WorkUnit
+import org.kui.server.worker.WorkerHost
 import org.kui.server.worker.workers.CoordinationWorker
 import org.kui.server.worker.workers.ActivityAlertWorker
+import org.kui.server.ws.SocketProxy
 import org.kui.storage.cassandra.CassandraKeyValueTable
 import org.kui.util.getProperty
 import org.kui.util.setProperty
@@ -40,6 +46,17 @@ private val log = LoggerFactory.getLogger("org.kui.server.main")
 
 
 fun main(args : Array<String>) {
+    DOMConfigurator.configure("log4j.xml") // Initialize logging
+
+    if (System.getenv("HOSTNAME") != null) {
+        println("Set work host name according to environment variables: ${System.getenv("HOSTNAME")}")
+        setProperty("work", "host", System.getenv("HOSTNAME"))
+    }
+
+    UserManagement.configure()
+
+    LogModule.initialize()
+    VrModule.initialize()
 
     val server = configureServer()
 
@@ -52,18 +69,11 @@ fun main(args : Array<String>) {
     val coordinationWorker = CoordinationWorker().start()
 
     val monitor = Monitor().start()
-
 }
 
 fun configureServer(): Undertow {
-    DOMConfigurator.configure("log4j.xml") // Initialize logging
-
-    if (System.getenv("HOSTNAME") != null) {
-        println("Set work host name according to environment variables: ${System.getenv("HOSTNAME")}")
-        setProperty("work", "host", System.getenv("HOSTNAME"))
-    }
-
-    UserManagement.configure()
+    Safe.registerType(WorkerHost::class.java)
+    Safe.registerType(WorkUnit::class.java)
 
     val sslContext = createSSLContext(
             loadKeyStore(getProperty("web", "web.keystore.path"), getProperty("web", "web.keystore.password")),

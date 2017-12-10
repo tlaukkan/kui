@@ -1,4 +1,4 @@
-package org.kui.server
+package org.kui.server.api
 
 import java.io.InputStream
 import java.io.OutputStream
@@ -22,7 +22,7 @@ abstract class StreamRestProcessor : RestProcessor {
 
         pathRegex = path
         for (id in idPlaceHolders) {
-            pathRegex = pathRegex.replace("<$id>", "(?<$id>[a-z0-9.%]*)")
+            pathRegex = pathRegex.replace("<$id>", "(?<$id>[^/]+)")
         }
     }
 

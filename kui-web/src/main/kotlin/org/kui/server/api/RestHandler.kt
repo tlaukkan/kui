@@ -1,4 +1,4 @@
-package org.kui.server
+package org.kui.server.api
 
 import io.undertow.server.HttpHandler
 import io.undertow.server.HttpServerExchange

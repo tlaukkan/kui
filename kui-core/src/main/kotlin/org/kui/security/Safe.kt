@@ -11,6 +11,59 @@ import java.util.*
 object Safe {
 
     /**
+     * Type class map.
+     */
+    private val typeClassMap = mutableMapOf<String, Class<out Record>>()
+    /**
+     * Class type map.
+     */
+    private val classTypeMap = mutableMapOf<Class<out Record>, String>()
+
+    /**
+     * Initialize core safe record types.
+     */
+    init {
+        Safe.registerType(GroupMemberRecord::class.java)
+        Safe.registerType(GroupRecord::class.java)
+        Safe.registerType(HostRecord::class.java)
+        Safe.registerType(LogRecord::class.java)
+        Safe.registerType(UserRecord::class.java)
+    }
+
+    /**
+     * Registers record type to be stored to safe.
+     * @param clazz the record class
+     */
+    @Synchronized fun registerType(clazz: Class<out Record>) {
+        typeClassMap.put(clazz.simpleName.toLowerCase(), clazz)
+        classTypeMap.put(clazz, clazz.simpleName.toLowerCase())
+    }
+
+    /**
+     * Gets record type.
+     * @param clazz the record class
+     * @return the record type
+     */
+    @Synchronized fun getType(clazz: Class<out Record>): String {
+        if (!classTypeMap.containsKey(clazz)) {
+            throw SecurityException("Unknown record type ${clazz.simpleName.toLowerCase()}")
+        }
+        return classTypeMap.get(clazz)!!
+    }
+
+    /**
+     * Gets record type.
+     * @param type the record type
+     * @return the record class
+     */
+    @Synchronized fun getClass(type: String): Class<out Record> {
+        if (!typeClassMap.containsKey(type)) {
+            throw SecurityException("Unknown record type $type")
+        }
+        return typeClassMap.get(type)!!
+    }
+
+    /**
      * Adds [record] to safe.
      */
     fun add(record: Record) {
@@ -24,7 +77,7 @@ object Safe {
         record.modified = Date()
 
         val key = record.key!!
-        val type = record.javaClass.name
+        val type = getType(record.javaClass)
 
         if (has(key, record.javaClass)) {
             throw SecurityException("Record already exists: ${record.key}:$type")
@@ -42,7 +95,7 @@ object Safe {
         record.modified = Date()
 
         val key = record.key!!
-        val type = record.javaClass.name
+        val type = getType(record.javaClass)
 
         if (!has(key, record.javaClass)) {
             throw SecurityException("Record does not exist: ${record.key}:$type")
@@ -56,22 +109,22 @@ object Safe {
      */
     fun remove(record: Record) {
         val key = record.key!!
-        val type = record.javaClass.name
+        val type = getType(record.javaClass)
         remove(key, type)
     }
 
     /**
      * Removes record of [clazz] with given [key] from safe.
      */
-    fun <T : Record> remove(key: String, clazz: Class<T>) : Unit {
-        val type = clazz.name
+    fun <T : Record> remove(key: String, clazz: Class<T>) {
+        val type = getType(clazz)
         remove(key, type)
     }
 
     /**
      * Removes record of [type] with given [key] from safe.
      */
-    fun remove(key: String, type: String) : Unit {
+    private fun remove(key: String, type: String) {
         UserManagement.checkPrivilege(key, type, PRIVILEGE_REMOVE)
         if (has(key, type)) {
             keyValueDao.remove(key, type)
@@ -82,14 +135,14 @@ object Safe {
      * Checks if record of [clazz] with given [key] is in safe.
      */
     fun <T : Record> has(key: String, clazz: Class<T>) : Boolean {
-        val type = clazz.name
+        val type = getType(clazz)
         return has(key, type)
     }
 
     /**
      * Checks if record of [type] with given [key] is in safe.
      */
-    fun has(key: String, type: String) : Boolean {
+    private fun has(key: String, type: String) : Boolean {
         return keyValueDao.has(key, type)
     }
 
@@ -98,7 +151,7 @@ object Safe {
      * @return the record
      */
     fun <T : Record> get(key: String, clazz: Class<T>): T? {
-        val type = clazz.name
+        val type = getType(clazz)
         if (keyValueDao.has(key, clazz)) {
             UserManagement.checkPrivilege(key, type, PRIVILEGE_GET)
         }
@@ -110,7 +163,7 @@ object Safe {
      * @return list of record keys
      */
     fun <T : Record> getKeys(clazz: Class<T>): List<String> {
-        val type = clazz.name
+        val type = getType(clazz)
         return keyValueDao.getKeys(type)
     }
 
@@ -120,8 +173,9 @@ object Safe {
      */
     fun <T : Record> getAll(clazz: Class<T>): List<T> {
         val records = keyValueDao.get(clazz)
+        val type = getType(clazz)
         for (record in records) {
-            UserManagement.checkPrivilege(record.key!!, clazz.name, PRIVILEGE_GET)
+            UserManagement.checkPrivilege(record.key!!, type, PRIVILEGE_GET)
         }
         return records
     }
@@ -132,8 +186,9 @@ object Safe {
      */
     fun <T : Record> getWithKeyPrefix(keyPrefix: String, clazz: Class<T>): List<T> {
         val records = keyValueDao.getWithKeyPrefix(keyPrefix, clazz)
+        val type = getType(clazz)
         for (record in records) {
-            UserManagement.checkPrivilege(record.key!!, clazz.name, PRIVILEGE_GET)
+            UserManagement.checkPrivilege(record.key!!, type, PRIVILEGE_GET)
         }
         return records
     }

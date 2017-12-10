@@ -4,7 +4,7 @@ import org.kui.server.api.getApiObjectMapper
 import org.kui.security.*
 import org.kui.security.model.Record
 import org.kui.server.api.getRecordClass
-import org.kui.server.StreamRestProcessor
+import org.kui.server.api.StreamRestProcessor
 import java.io.InputStream
 import java.io.OutputStream
 import kotlin.reflect.KMutableProperty
@@ -21,7 +21,7 @@ class PutRecord : StreamRestProcessor("/api/safe/<type>/<key>", "PUT", listOf(GR
             throw SecurityException("Updated record had key mismatch with URL and value object.")
         }
 
-        if (!Safe.has(key, clazz.name)) {
+        if (!Safe.has(key, clazz)) {
             throw SecurityException("No such $key:${clazz.name} record.")
         }
 

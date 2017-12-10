@@ -1,4 +1,4 @@
-package org.kui.server
+package org.kui.server.ws
 
 import javax.websocket.*
 import javax.websocket.server.ServerEndpoint

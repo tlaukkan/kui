@@ -18,7 +18,7 @@ object UserManagement {
      */
     fun configure() {
 
-        if (!keyValueDao.has(GROUP_SYSTEM, GroupRecord::class.java.name)) {
+        if (!keyValueDao.has(GROUP_SYSTEM, GroupRecord::class.java.simpleName.toLowerCase())) {
             val systemUser = UserRecord(USER_SYSTEM_USER, Date(), Date(), null, null)
             keyValueDao.add(systemUser.key!!, systemUser)
 
@@ -62,7 +62,7 @@ object UserManagement {
      * Grants user identified by [userKey] membership to group identified by [groupKey].
      */
     fun grantGroup(userKey: String, groupKey: String) {
-        checkPrivilege(groupKey, GroupRecord::class.java.name, PRIVILEGE_UPDATE)
+        checkPrivilege(groupKey, GroupRecord::class.java.simpleName.toLowerCase(), PRIVILEGE_UPDATE)
 
         val groupUserMember = GroupMemberRecord("g:$groupKey:$userKey", Date(), Date(), groupKey, userKey)
         keyValueDao.add(groupUserMember.key!!, groupUserMember)
@@ -75,10 +75,10 @@ object UserManagement {
      * Revokes user identified by [userKey] membership from group identified by [groupKey].
      */
     fun revokeGroup(userKey: String, groupKey: String) {
-        checkPrivilege(groupKey, GroupRecord::class.java.name, PRIVILEGE_UPDATE)
+        checkPrivilege(groupKey, GroupRecord::class.java.simpleName.toLowerCase(), PRIVILEGE_UPDATE)
 
-        keyValueDao.remove("g:$groupKey:$userKey", GroupMemberRecord::class.java.name)
-        keyValueDao.remove("u:$userKey:$groupKey", GroupMemberRecord::class.java.name)
+        keyValueDao.remove("g:$groupKey:$userKey", GroupMemberRecord::class.java.simpleName.toLowerCase())
+        keyValueDao.remove("u:$userKey:$groupKey", GroupMemberRecord::class.java.simpleName.toLowerCase())
 
         log.info("AUDIT '${ContextService.getThreadContext().user}' revoked '$userKey' membership from '$groupKey'.")
     }
@@ -103,7 +103,7 @@ object UserManagement {
      * @throws SecurityException if current user does not have the privilege.
      */
     fun checkPrivilege(record: Record, operation: String) {
-        checkPrivilege(record.key!!, record.javaClass.name, operation)
+        checkPrivilege(record.key!!, record.javaClass.simpleName.toLowerCase(), operation)
     }
 
     /**

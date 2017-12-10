@@ -2,7 +2,7 @@ package org.kui.server.api.users.login
 
 import org.kui.security.GROUP_ADMIN
 import org.kui.security.UserManagement
-import org.kui.server.StreamRestProcessor
+import org.kui.server.api.StreamRestProcessor
 import java.io.InputStream
 import java.io.OutputStream
 

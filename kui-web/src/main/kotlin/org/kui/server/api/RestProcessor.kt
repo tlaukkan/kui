@@ -1,4 +1,4 @@
-package org.kui.server
+package org.kui.server.api
 
 import java.io.InputStream
 import java.io.OutputStream

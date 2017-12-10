@@ -6,7 +6,7 @@ import org.kui.security.GROUP_USER
 import org.kui.security.ContextService
 import org.kui.security.Crypto
 import org.kui.server.api.getApiObjectMapper
-import org.kui.server.StreamRestProcessor
+import org.kui.server.api.StreamRestProcessor
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*

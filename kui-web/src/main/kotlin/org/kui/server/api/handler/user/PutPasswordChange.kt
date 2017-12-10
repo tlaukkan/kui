@@ -3,7 +3,7 @@ package org.kui.server.api.users.login
 import org.kui.security.*
 import org.kui.server.api.getApiObjectMapper
 import org.kui.server.api.users.PasswordChange
-import org.kui.server.StreamRestProcessor
+import org.kui.server.api.StreamRestProcessor
 import java.io.InputStream
 import java.io.OutputStream
 

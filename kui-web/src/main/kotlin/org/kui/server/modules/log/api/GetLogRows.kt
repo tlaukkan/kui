@@ -1,13 +1,12 @@
-package org.kui.server.api.handler.log
+package org.kui.server.modules.log.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.kui.model.LogResult
 import org.kui.model.LogRow
 import org.kui.security.GROUP_USER
-import org.kui.server.StreamRestProcessor
-import org.kui.server.storage.environmentLogsDao
-import org.kui.server.storage.hostLogsDao
+import org.kui.server.api.StreamRestProcessor
+import org.kui.server.modules.log.LogModule
 import org.kui.storage.model.TimeValueResult
 import java.io.InputStream
 import java.io.OutputStream
@@ -81,9 +80,9 @@ class GetLogRows : StreamRestProcessor("/api/log/rows", "GET", listOf(GROUP_USER
         val logRows = arrayListOf<LogRow>()
         val result: TimeValueResult
         if (hosts.size > 0) {
-            result = hostLogsDao.get(beginTime, beginId, endTime, hosts, logs)
+            result = LogModule.hostLogsDao.get(beginTime, beginId, endTime, hosts, logs)
         } else {
-            result = environmentLogsDao.get(beginTime, beginId, endTime, environments, logs)
+            result = LogModule.environmentLogsDao.get(beginTime, beginId, endTime, environments, logs)
         }
         for (timeValueRow in result.rows) {
             val logRow = mapper.readValue(timeValueRow.value, LogRow::class.java)

@@ -6,7 +6,7 @@ import org.apache.commons.lang.StringUtils
 import org.slf4j.LoggerFactory
 import org.kui.security.GROUP_ANONYMOUS
 import org.kui.security.GROUP_USER
-import org.kui.server.StreamRestProcessor
+import org.kui.server.api.StreamRestProcessor
 import org.kui.util.getProperty
 import java.io.File
 import java.io.FileInputStream

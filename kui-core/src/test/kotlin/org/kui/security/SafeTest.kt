@@ -9,6 +9,8 @@ class SafeTest : DatabaseUnitTest() {
     @Test
     fun testSafe() {
 
+        Safe.registerType(TestRecord::class.java)
+
         val testKey = "test.key"
         val testValue = "test.value"
         val testValue2 = "test.value.2"
@@ -27,7 +29,7 @@ class SafeTest : DatabaseUnitTest() {
             Safe.add(testRecord)
             Assert.fail("Adding same record should throw security exception.")
         } catch (e: SecurityException) {
-            Assert.assertEquals("Record already exists: test.key:org.kui.security.TestRecord", e.message)
+            Assert.assertEquals("Record already exists: test.key:testrecord", e.message)
         }
         Assert.assertNotNull(Safe.get(testKey, TestRecord::class.java))
         Assert.assertTrue(Safe.has(testKey, TestRecord::class.java))
