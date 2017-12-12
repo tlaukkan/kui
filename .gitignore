@@ -7,9 +7,9 @@ build
 out
 images
 *.log*
+*.bak
 *.dat
 kui-client/*-ext.properties
-kui-web/*-ext.properties
 *-ext-example.properties
 *.truststore
 gradlew
