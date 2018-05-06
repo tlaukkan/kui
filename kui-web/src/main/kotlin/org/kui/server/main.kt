@@ -21,6 +21,7 @@ import org.kui.server.modules.log.api.PostLogBatch
 import org.kui.server.api.handler.safe.*
 import org.kui.server.api.users.*
 import org.kui.server.api.users.login.*
+import org.kui.server.modules.health.api.PostHeartRate
 import org.kui.server.modules.log.LogModule
 import org.kui.server.modules.vr.VrModule
 import org.kui.server.worker.WorkUnit
@@ -98,6 +99,7 @@ fun configureServer(): Undertow {
     restHandler.processors.add(GetLogs())
     restHandler.processors.add(GetLogRows())
     restHandler.processors.add(PostLogBatch())
+    restHandler.processors.add(PostHeartRate());
 
     restHandler.processors.add(DeleteRecord())
     restHandler.processors.add(GetRecords())
@@ -137,6 +139,10 @@ fun configureServer(): Undertow {
     } else {
         log.info("Development mode, loading resources from project folders.")
         server = Undertow.builder()
+                .addHttpListener(
+                        8080,
+                        getProperty("web", "web.listen.address").trim()
+                )
                 .addHttpsListener(
                         getProperty("web", "web.listen.port").toInt(),
                         getProperty("web", "web.listen.address").trim(),

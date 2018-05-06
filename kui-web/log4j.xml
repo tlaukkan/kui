@@ -20,19 +20,35 @@
         </layout>
     </appender>
 
+    <appender name="healthfile" class="org.apache.log4j.RollingFileAppender">
+        <param name="append" value="true" />
+        <param name="maxFileSize" value="10MB" />
+        <param name="maxBackupIndex" value="10" />
+        <param name="file" value="health.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="%d{yyyy-MM-dd HH:mm:ss.SSS},%m%n" />
+        </layout>
+    </appender>
+
     <appender name="kui" class="org.kui.client.tracker.log4j.KuiAppender">
     </appender>
 
-    <logger additivity="true" name="org.kui">
+    <logger name="org.kui">
         <level value="debug"/>
     </logger>
 
-    <logger additivity="true" name="org.xnio">
+    <logger name="org.xnio">
         <level value="warn"/>
     </logger>
 
-    <logger additivity="true" name="com.datastax">
+    <logger name="com.datastax">
         <level value="warn"/>
+    </logger>
+
+    <logger name="org.kui.server.modules.health.api">
+        <level value="info"/>
+        <appender-ref ref="healthfile" />
     </logger>
 
     <root>
